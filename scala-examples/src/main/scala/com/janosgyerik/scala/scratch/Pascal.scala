@@ -1,4 +1,4 @@
-package com.janosgyerik.scala
+package com.janosgyerik.scala.scratch
 
 object Pascal {
   def pascal(c: Int, r: Int): Int = {

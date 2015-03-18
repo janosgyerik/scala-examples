@@ -1,4 +1,4 @@
-package com.janosgyerik.scala
+package com.janosgyerik.scala.scratch
 
 object HelloWorld {
   def main(args: Array[String]) {
