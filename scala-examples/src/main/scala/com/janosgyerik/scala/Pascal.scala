@@ -9,8 +9,8 @@ object Pascal {
   }
 
   def main(args: Array[String]) {
-	println(pascal(3, 4))
-	println(pascal(3, 3))
-	//println(pascal(4, 3))
+    println(pascal(3, 4))
+    println(pascal(3, 3))
+    //println(pascal(4, 3))
   }
 }
