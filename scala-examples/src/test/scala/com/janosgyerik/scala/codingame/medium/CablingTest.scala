@@ -42,4 +42,17 @@ class CablingTest extends FunSuite {
     val coords = parseInput(input3)
     assert((0, 2) == rangeOfX(coords))
   }
+
+  def sortedY(tuples: List[(Int, Int)]) = {
+    val y = tuples.map { pair => pair._2 }
+    y.sorted
+  }
+
+  test("sortedY, input1") {
+    assert(List(0, 1, 2) == sortedY(parseInput(input1)))
+  }
+
+  test("sortedY, input3") {
+    assert(List(0, 2, 2, 3) == sortedY(parseInput(input3)))
+  }
 }
