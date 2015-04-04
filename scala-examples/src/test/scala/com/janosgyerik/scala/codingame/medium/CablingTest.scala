@@ -22,4 +22,8 @@ class CablingTest extends FunSuite {
   test("parseInput 3, 0 0, 1 1, 2 2") {
     assert(List((0, 0), (1, 1), (2, 2)) == parseInput(Array("3", "0 0", "1 1", "2 2").toIterable))
   }
+
+  test("parseInput 4, 1 2, 0 0, 2 2, 1 3") {
+    assert(List((1, 2), (0, 0), (2, 2), (1, 3)) == parseInput(Array("4", "1 2", "0 0", "2 2", "1 3").toIterable))
+  }
 }
