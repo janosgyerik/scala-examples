@@ -62,11 +62,25 @@ class CablingTest extends FunSuite {
 
   test("sumDistancesFrom, input1") {
     val y = sortedY(parseInput(input1))
-    for { i <- y } println(sumDistancesFrom(y, i))
+//    for { i <- y } println(sumDistancesFrom(y, i))
   }
 
   test("sumDistancesFrom, input3") {
     val y = sortedY(parseInput(input3))
-    for { i <- y } println(sumDistancesFrom(y, i))
+//    for { i <- y } println(sumDistancesFrom(y, i))
+  }
+
+  def minLength(coords: List[(Int, Int)]) = {
+    val y = sortedY(coords)
+    val range = rangeOfX(coords)
+    range._2 - range._1 + { for { i <- y } yield sumDistancesFrom(y, i) }.min
+  }
+
+  test("minLength, input1") {
+    assert(4 == minLength(parseInput(input1)))
+  }
+
+  test("minLength, input3") {
+    assert(5 == minLength(parseInput(input3)))
   }
 }
