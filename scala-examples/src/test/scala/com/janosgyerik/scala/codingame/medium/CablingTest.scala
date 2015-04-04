@@ -27,4 +27,14 @@ class CablingTest extends FunSuite {
   test("parseInput 4, 1 2, 0 0, 2 2, 1 3") {
     assert(List((1, 2), (0, 0), (2, 2), (1, 3)) == parseInput(input3.toIterable))
   }
+
+  def rangeOfX(tuples: List[(Int, Int)]) = {
+    val x = tuples.map { pair => pair._1 }
+    (x.min, x.max)
+  }
+
+  test("rangeOfX, input1") {
+    val coords = parseInput(input1)
+    assert((0, 2) == rangeOfX(coords))
+  }
 }
