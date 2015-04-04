@@ -4,8 +4,6 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import scala.collection.mutable.ArrayBuffer
-
 @RunWith(classOf[JUnitRunner])
 class CablingTest extends FunSuite {
   //  import com.janosgyerik.scala.coursera1.Sqrt.sqrt
@@ -19,11 +17,14 @@ class CablingTest extends FunSuite {
     }.toList
   }
 
+  val input1 = Array("3", "0 0", "1 1", "2 2")
+  val input3 = Array("4", "1 2", "0 0", "2 2", "1 3")
+
   test("parseInput 3, 0 0, 1 1, 2 2") {
-    assert(List((0, 0), (1, 1), (2, 2)) == parseInput(Array("3", "0 0", "1 1", "2 2").toIterable))
+    assert(List((0, 0), (1, 1), (2, 2)) == parseInput(input1.toIterable))
   }
 
   test("parseInput 4, 1 2, 0 0, 2 2, 1 3") {
-    assert(List((1, 2), (0, 0), (2, 2), (1, 3)) == parseInput(Array("4", "1 2", "0 0", "2 2", "1 3").toIterable))
+    assert(List((1, 2), (0, 0), (2, 2), (1, 3)) == parseInput(input3.toIterable))
   }
 }
