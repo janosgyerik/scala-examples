@@ -37,4 +37,9 @@ class CablingTest extends FunSuite {
     val coords = parseInput(input1)
     assert((0, 2) == rangeOfX(coords))
   }
+
+  test("rangeOfX, input3") {
+    val coords = parseInput(input3)
+    assert((0, 2) == rangeOfX(coords))
+  }
 }
