@@ -55,4 +55,18 @@ class CablingTest extends FunSuite {
   test("sortedY, input3") {
     assert(List(0, 2, 2, 3) == sortedY(parseInput(input3)))
   }
+
+  def sumDistancesFrom(ints: List[Int], from: Int) = {
+    ints.map { x => Math.abs(from - x) }.sum
+  }
+
+  test("sumDistancesFrom, input1") {
+    val y = sortedY(parseInput(input1))
+    for { i <- y } println(sumDistancesFrom(y, i))
+  }
+
+  test("sumDistancesFrom, input3") {
+    val y = sortedY(parseInput(input3))
+    for { i <- y } println(sumDistancesFrom(y, i))
+  }
 }
