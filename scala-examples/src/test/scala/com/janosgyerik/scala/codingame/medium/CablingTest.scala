@@ -55,12 +55,12 @@ class CablingTest extends FunSuite {
 
   test("sumDistancesFrom, input1") {
     val y = sortedY(parseInput(input1))
-    //    for { i <- y } println(sumDistancesFrom(y, i))
+    assert(List(3, 2, 3) == { for { i <- y } yield sumDistancesFrom(y, i) })
   }
 
   test("sumDistancesFrom, input3") {
     val y = sortedY(parseInput(input3))
-    //    for { i <- y } println(sumDistancesFrom(y, i))
+    assert(List(7, 3, 3, 5) == { for { i <- y } yield sumDistancesFrom(y, i) })
   }
 
   test("minLength, input1") {
