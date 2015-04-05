@@ -17,8 +17,7 @@ object Cabling {
   }
 
   def sortedY(tuples: List[(Int, Int)]) = {
-    val y = tuples.map { pair => pair._2 }
-    y.sorted
+    tuples.map { pair => pair._2 }.sorted
   }
 
   def sumDistancesFrom(ints: List[Int], from: Int) = {
