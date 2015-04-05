@@ -20,7 +20,7 @@ class CablingTest extends FunSuite {
   val input1 = Array("3", "0 0", "1 1", "2 2")
   val input3 = Array("4", "1 2", "0 0", "2 2", "1 3")
   val input4 = Array("1", "1 1")
-  val input5 = Array("3", "-5 -3", "9 2", "3 -4")
+  val input5 = Array("3", "-5 -3", "-9 2", "3 -4")
   val input6 = Array("8",
     "-28189131 593661218",
     "102460950 1038903636",
