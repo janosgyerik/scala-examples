@@ -21,7 +21,8 @@ object Cabling {
   }
 
   def sumDistancesFrom(ints: List[Int], from: Int) = {
-    ints.map { x => Math.abs(from.asInstanceOf[Long] - x.asInstanceOf[Long]) }.sum
+    val longval = from.asInstanceOf[Long]
+    ints.map { x => Math.abs(longval - x.asInstanceOf[Long]) }.sum
   }
 
   def minLength(coords: List[(Int, Int)]) = {
