@@ -4,6 +4,8 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
+import scala.io.Source
+
 @RunWith(classOf[JUnitRunner])
 class CablingTest extends FunSuite {
   //  import com.janosgyerik.scala.coursera1.Sqrt.sqrt
@@ -106,5 +108,9 @@ class CablingTest extends FunSuite {
 
   test("minLength, input6") {
     assert(6066790161L == minLength(parseInput(input6)))
+  }
+
+  test("# of lines in input7") {
+    assert(100001 == Source.fromFile("src/test/resources/codingame/medium/cabling/in7.txt").getLines().size)
   }
 }
