@@ -46,20 +46,20 @@ class CablingTest extends FunSuite {
   }
 
   test("sortedY, input1") {
-    assert(List(0, 1, 2) == sortedY(parseInput(input1)))
+    assert(List(0, 1, 2) == getSortedY(parseInput(input1)))
   }
 
   test("sortedY, input3") {
-    assert(List(0, 2, 2, 3) == sortedY(parseInput(input3)))
+    assert(List(0, 2, 2, 3) == getSortedY(parseInput(input3)))
   }
 
   test("sumDistancesFrom, input1") {
-    val y = sortedY(parseInput(input1))
+    val y = getSortedY(parseInput(input1))
     assert(List(3, 2, 3) == { for { i <- y } yield sumDistancesFrom(y, i) })
   }
 
   test("sumDistancesFrom, input3") {
-    val y = sortedY(parseInput(input3))
+    val y = getSortedY(parseInput(input3))
     assert(List(7, 3, 3, 5) == { for { i <- y } yield sumDistancesFrom(y, i) })
   }
 

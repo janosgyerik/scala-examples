@@ -16,7 +16,7 @@ object Cabling {
     (x.min, x.max)
   }
 
-  def sortedY(tuples: List[(Int, Int)]) = {
+  def getSortedY(tuples: List[(Int, Int)]) = {
     tuples.map { pair => pair._2 }.sorted
   }
 
@@ -25,12 +25,20 @@ object Cabling {
     ints.map { x => Math.abs(longval - x.asInstanceOf[Long]) }.sum
   }
 
-  def minLength(coords: List[(Int, Int)]) = {
-    val y = sortedY(coords)
+  def getMinXLength(coords: List[(Int, Int)]) = {
     val range = rangeOfX(coords)
-    range._2 - range._1 + {
-      for {i <- y} yield sumDistancesFrom(y, i)
-    }.min
+    range._2 - range._1
+  }
+
+  def getMinYLength(coords: List[(Int, Int)]) = {
+    val sortedY = getSortedY(coords)
+    sortedY.map(y => sumDistancesFrom(sortedY, y)).min
+  }
+
+  def minLength(coords: List[(Int, Int)]) = {
+    val xLength = getMinXLength(coords)
+    val yLength = getMinYLength(coords)
+    xLength + yLength
   }
 
 }
