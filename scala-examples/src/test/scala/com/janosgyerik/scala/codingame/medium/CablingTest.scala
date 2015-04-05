@@ -113,4 +113,10 @@ class CablingTest extends FunSuite {
   test("# of lines in input7") {
     assert(100001 == Source.fromFile("src/test/resources/codingame/medium/cabling/in7.txt").getLines().size)
   }
+
+  test("minLength, input7") {
+    // TODO TLE
+//    assert(100001 == minLength(parseInput(
+//      Source.fromFile("src/test/resources/codingame/medium/cabling/in7.txt").getLines().toIterable)))
+  }
 }
