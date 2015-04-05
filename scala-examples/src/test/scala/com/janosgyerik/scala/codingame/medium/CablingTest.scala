@@ -69,7 +69,7 @@ class CablingTest extends FunSuite {
   }
 
   def sumDistancesFrom(ints: List[Int], from: Int) = {
-    ints.map { x => Math.abs(from - x) }.sum
+    ints.map { x => Math.abs(from.asInstanceOf[Long] - x.asInstanceOf[Long]) }.sum
   }
 
   test("sumDistancesFrom, input1") {
