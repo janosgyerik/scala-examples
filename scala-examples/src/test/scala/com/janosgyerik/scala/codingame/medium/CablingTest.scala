@@ -6,18 +6,11 @@ import org.scalatest.junit.JUnitRunner
 
 import scala.io.Source
 
+
 @RunWith(classOf[JUnitRunner])
 class CablingTest extends FunSuite {
-  //  import com.janosgyerik.scala.coursera1.Sqrt.sqrt
 
-  def parseInput(lines: Iterable[String]) = {
-    lines.tail.map {
-      line => {
-        val parts = line.split(" ").take(2).map(x => x.toInt)
-        (parts(0), parts(1))
-      }
-    }.toList
-  }
+  import com.janosgyerik.scala.codingame.medium.Cabling._
 
   val input1 = Array("3", "0 0", "1 1", "2 2")
   val input3 = Array("4", "1 2", "0 0", "2 2", "1 3")
@@ -42,11 +35,6 @@ class CablingTest extends FunSuite {
     assert(List((1, 2), (0, 0), (2, 2), (1, 3)) == parseInput(input3.toIterable))
   }
 
-  def rangeOfX(tuples: List[(Int, Int)]) = {
-    val x = tuples.map { pair => pair._1 }
-    (x.min, x.max)
-  }
-
   test("rangeOfX, input1") {
     val coords = parseInput(input1)
     assert((0, 2) == rangeOfX(coords))
@@ -57,11 +45,6 @@ class CablingTest extends FunSuite {
     assert((0, 2) == rangeOfX(coords))
   }
 
-  def sortedY(tuples: List[(Int, Int)]) = {
-    val y = tuples.map { pair => pair._2 }
-    y.sorted
-  }
-
   test("sortedY, input1") {
     assert(List(0, 1, 2) == sortedY(parseInput(input1)))
   }
@@ -70,24 +53,14 @@ class CablingTest extends FunSuite {
     assert(List(0, 2, 2, 3) == sortedY(parseInput(input3)))
   }
 
-  def sumDistancesFrom(ints: List[Int], from: Int) = {
-    ints.map { x => Math.abs(from.asInstanceOf[Long] - x.asInstanceOf[Long]) }.sum
-  }
-
   test("sumDistancesFrom, input1") {
     val y = sortedY(parseInput(input1))
-//    for { i <- y } println(sumDistancesFrom(y, i))
+    //    for { i <- y } println(sumDistancesFrom(y, i))
   }
 
   test("sumDistancesFrom, input3") {
     val y = sortedY(parseInput(input3))
-//    for { i <- y } println(sumDistancesFrom(y, i))
-  }
-
-  def minLength(coords: List[(Int, Int)]) = {
-    val y = sortedY(coords)
-    val range = rangeOfX(coords)
-    range._2 - range._1 + { for { i <- y } yield sumDistancesFrom(y, i) }.min
+    //    for { i <- y } println(sumDistancesFrom(y, i))
   }
 
   test("minLength, input1") {
@@ -116,7 +89,7 @@ class CablingTest extends FunSuite {
 
   test("minLength, input7") {
     // TODO TLE
-//    assert(100001 == minLength(parseInput(
-//      Source.fromFile("src/test/resources/codingame/medium/cabling/in7.txt").getLines().toIterable)))
+    //    assert(100001 == minLength(parseInput(
+    //      Source.fromFile("src/test/resources/codingame/medium/cabling/in7.txt").getLines().toIterable)))
   }
 }
