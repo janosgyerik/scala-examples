@@ -20,13 +20,15 @@ object Mayan {
     }
 
     def fromLong(longValue: Long) = {
-      def inner(num: Long): List[Digit] = num match {
-        case 0 => List()
-        case x => digits((num % Dialect.radix).asInstanceOf[Int]) :: inner(num / Dialect.radix)
+      longValue match {
+        case 0 => new Number(IndexedSeq(digits.head))
+        case _ =>
+          def inner(num: Long): List[Digit] = num match {
+            case 0 => List()
+            case x => digits((num % Dialect.radix).asInstanceOf[Int]) :: inner(num / Dialect.radix)
+          }
+          new Number(inner(longValue).toIndexedSeq.reverse)
       }
-      val seq = inner(longValue).toIndexedSeq.reverse
-      if (seq.isEmpty) new Number(IndexedSeq(digits.head))
-      else new Number(seq)
     }
   }
 
