@@ -1,5 +1,8 @@
 package com.janosgyerik.scala.codingame.medium
 
+import java.io.File
+import java.util.Scanner
+
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -55,12 +58,16 @@ class CablingTest extends FunSuite {
 
   test("sumDistancesFrom, input1") {
     val y = getSortedY(parseInput(input1))
-    assert(List(3, 2, 3) == { for { i <- y } yield sumDistancesFrom(y, i) })
+    assert(List(3, 2, 3) == {
+      for {i <- y} yield sumDistancesFrom(y, i)
+    })
   }
 
   test("sumDistancesFrom, input3") {
     val y = getSortedY(parseInput(input3))
-    assert(List(7, 3, 3, 5) == { for { i <- y } yield sumDistancesFrom(y, i) })
+    assert(List(7, 3, 3, 5) == {
+      for {i <- y} yield sumDistancesFrom(y, i)
+    })
   }
 
   test("minLength, input1") {
@@ -104,4 +111,14 @@ class CablingTest extends FunSuite {
   test("countBigger 0 0 1 1 1 2 3 4 4 4 4 4 5") {
     assert(List(11, 11, 8, 8, 8, 7, 6, 1, 1, 1, 1, 1, 0) == countBigger(List(0, 0, 1, 1, 1, 2, 3, 4, 4, 4, 4, 4, 5)))
   }
+
+  val testdir = "src/test/resources/codingame/medium/cabling"
+
+  for (i <- 1 to 9) {
+    test("input" + i) {
+      assert(Source.fromFile(testdir + "/out" + i + ".txt").mkString.trim
+        == solve(new Scanner(new File(testdir + "/in" + i + ".txt"))).toString)
+    }
+  }
+
 }

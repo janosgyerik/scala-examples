@@ -1,5 +1,7 @@
 package com.janosgyerik.scala.codingame.medium
 
+import java.util.Scanner
+
 object Cabling {
 
   def parseInput(lines: Iterable[String]) = {
@@ -72,6 +74,14 @@ object Cabling {
 
   def countBigger(ints: List[Int]) = {
     countSmaller(ints.reverse).reverse
+  }
+
+  def solve(scanner: Scanner): Long = {
+    val linesCount = scanner.nextInt()
+    scanner.nextLine()
+
+    val lines = for {_ <- 1 to linesCount} yield scanner.nextLine()
+    minLength(parseInput(List("") ++ lines))
   }
 
 }
