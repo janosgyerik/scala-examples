@@ -32,34 +32,13 @@ object Cabling {
 
   def getMinYLength(coords: List[(Int, Int)]) = {
     val sortedY = getSortedY(coords)
+
     // O(N^2)
     //sortedY.map(y => sumDistancesFrom(sortedY, y)).min
-    // 0 0 0 1 2 3 3 3 3 4 4 5 5 5 5 7 8 9
-    def countCurrent(startIndex: Int, current: Int) = sortedY.drop(startIndex).takeWhile(x => x == current).size
 
-    def findCloseToEvenPartitionIndex(startIndex: Int, leftCount: Int, currentCount: Int, rightCount: Int): Int = {
-      if (leftCount >= rightCount) startIndex
-      else {
-        val current = sortedY(startIndex)
-        val nextCurrentCount = countCurrent(startIndex, current)
-        findCloseToEvenPartitionIndex(0, leftCount + currentCount, nextCurrentCount, rightCount - nextCurrentCount)
-      }
-    }
-    val currentCount = countCurrent(0, sortedY.head)
-    val index = findCloseToEvenPartitionIndex(currentCount - 1, 0, currentCount, sortedY.size - currentCount)
-    if (index > 0) {
-      if (index < sortedY.size - 1) {
-        (index - 1 to index + 1).map(y => sumDistancesFrom(sortedY, sortedY(y))).min
-      } else {
-        (index - 1 to index).map(y => sumDistancesFrom(sortedY, sortedY(y))).min
-      }
-    } else {
-      if (index < sortedY.size - 1) {
-        (index to index + 1).map(y => sumDistancesFrom(sortedY, sortedY(y))).min
-      } else {
-        (index to index).map(y => sumDistancesFrom(sortedY, sortedY(y))).min
-      }
-    }
+    val diffs = countSmaller(sortedY).zip(countBigger(sortedY)).map(x => Math.abs(x._1 - x._2))
+    val bestSplitIndex = (0 until diffs.size).zip(diffs).minBy({ case (index, diff) => diff })._1
+    sumDistancesFrom(sortedY, sortedY(bestSplitIndex))
   }
 
   def minLength(coords: List[(Int, Int)]) = {
@@ -76,6 +55,10 @@ object Cabling {
         else List(total) ++ inner(xs, x, total, total + 1)
     }
     List(0) ++ inner(ints.tail, ints.head, 0, 1)
+  }
+
+  def countBigger(ints: List[Int]) = {
+    countSmaller(ints.reverse).reverse
   }
 
 }

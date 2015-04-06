@@ -88,12 +88,16 @@ class CablingTest extends FunSuite {
   }
 
   test("minLength, input7") {
-    // TODO TLE
+    // TODO TLE / StackOverflow
 //        assert(3142894 == minLength(parseInput(
 //          Source.fromFile("src/test/resources/codingame/medium/cabling/in7.txt").getLines().toIterable)))
   }
 
   test("countSmaller 0 0 1 1 1 2 3 4 4 4 4 4 5") {
     assert(List(0, 0, 2, 2, 2, 5, 6, 7, 7, 7, 7, 7, 12) == countSmaller(List(0, 0, 1, 1, 1, 2, 3, 4, 4, 4, 4, 4, 5)))
+  }
+
+  test("countBigger 0 0 1 1 1 2 3 4 4 4 4 4 5") {
+    assert(List(11, 11, 8, 8, 8, 7, 6, 1, 1, 1, 1, 1, 0) == countBigger(List(0, 0, 1, 1, 1, 2, 3, 4, 4, 4, 4, 4, 5)))
   }
 }
