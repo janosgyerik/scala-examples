@@ -6,9 +6,6 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import scala.io.Source
-
-
 @RunWith(classOf[JUnitRunner])
 class MayanTest extends FunSuite {
 
@@ -31,6 +28,46 @@ class MayanTest extends FunSuite {
 
   test("dialect digit 7") {
     assert("Digit(Vector(oo.., ____, ...., ....), 7)" == dialect.digits(7).toString)
+  }
+
+  test("dialect digit 12") {
+    assert("Digit(Vector(oo.., ____, ____, ....), 12)" == dialect.digits(12).toString)
+  }
+
+  test("dialect digit 0") {
+    assert("Digit(Vector(.oo., o..o, .oo., ....), 0)" == dialect.digits.head.toString)
+  }
+
+  test("dialect digit 5") {
+    assert("Digit(Vector(...., ____, ...., ....), 5)" == dialect.digits(5).toString)
+  }
+
+  test("parsing mayan 4805") {
+    assert(4805 == Number.fromScanner(dialect, new Scanner(
+      "12\n" +
+        "oo..\n" +
+        "____\n" +
+        "____\n" +
+        "....\n" +
+        ".oo.\n" +
+        "o..o\n" +
+        ".oo.\n" +
+        "....\n" +
+        "....\n" +
+        "____\n" +
+        "....\n" +
+        "....\n"
+    )).intValue)
+  }
+
+  test("parsing mayan 1") {
+    assert(1 == Number.fromScanner(dialect, new Scanner(
+      "4\n" +
+        "o...\n" +
+        "....\n" +
+        "....\n" +
+        "....\n"
+    )).intValue)
   }
 
 }

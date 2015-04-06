@@ -60,6 +60,7 @@ object Mayan {
   object Number {
     def fromScanner(dialect: Dialect, scanner: Scanner) = {
       val linesCount = scanner.nextInt()
+      scanner.nextLine()
       val lines = for {_ <- 1 to linesCount} yield scanner.nextLine()
       dialect.numberFromLines(lines)
     }
