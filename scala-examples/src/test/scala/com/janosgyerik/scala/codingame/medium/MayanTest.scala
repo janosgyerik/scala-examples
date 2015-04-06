@@ -52,7 +52,7 @@ class MayanTest extends FunSuite {
         "____\n" +
         "....\n" +
         "....\n"
-    )).intValue)
+    )).longValue)
   }
 
   test("parsing mayan 1") {
@@ -62,15 +62,15 @@ class MayanTest extends FunSuite {
         "....\n" +
         "....\n" +
         "....\n"
-    )).intValue)
+    )).longValue)
   }
 
   test("converting 4805 to mayan") {
-    val mayan = dialect.fromInt(4805)
-    assert(4805 == mayan.intValue)
+    val mayan = dialect.fromLong(4805)
+    assert(4805 == mayan.longValue)
 
     val digits = mayan.digits
-    assert(Vector(12, 0, 5) == digits.map(x => x.intValue))
+    assert(Vector(12, 0, 5) == digits.map(x => x.longValue))
   }
 
   val testdir = "src/test/resources/codingame/medium/mayan"

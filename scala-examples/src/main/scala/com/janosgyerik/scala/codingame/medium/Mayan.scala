@@ -19,12 +19,12 @@ object Mayan {
       lines2digits.get(lines).get
     }
 
-    def fromInt(intValue: Int) = {
-      def inner(num: Int): List[Digit] = num match {
+    def fromLong(longValue: Long) = {
+      def inner(num: Long): List[Digit] = num match {
         case 0 => List()
-        case x => digits(num % Dialect.radix) :: inner(num / Dialect.radix)
+        case x => digits((num % Dialect.radix).asInstanceOf[Int]) :: inner(num / Dialect.radix)
       }
-      new Number(inner(intValue).toIndexedSeq.reverse)
+      new Number(inner(longValue).toIndexedSeq.reverse)
     }
   }
 
@@ -38,23 +38,23 @@ object Mayan {
 
       val lines = for {_ <- 1 to height} yield scanner.nextLine()
 
-      def extractDigitLines(intValue: Int) = {
-        val start = width * intValue
+      def extractDigitLines(ord: Int) = {
+        val start = width * ord
         for {row <- 0 until height} yield lines(row).slice(start, start + width)
       }
 
-      val digits = for {intValue <- 0 to radix} yield new Digit(extractDigitLines(intValue), intValue)
+      val digits = for {ord <- 0 to radix} yield new Digit(extractDigitLines(ord), ord)
 
       new Dialect(width, height, digits)
     }
   }
 
-  class Digit(val lines: IndexedSeq[String], val intValue: Int) {
+  class Digit(val lines: IndexedSeq[String], val longValue: Long) {
     override def toString = lines.foldLeft("")((x, y) => x + y + "\n")
   }
 
   class Number(val digits: IndexedSeq[Digit]) {
-    lazy val intValue: Int = digits.foldLeft(0)((x, y) => Dialect.radix * x + y.intValue)
+    lazy val longValue: Long = digits.foldLeft(0L)((x, y) => Dialect.radix * x + y.longValue)
 
     override def toString = digits.foldLeft("")((x, y) => x + y)
   }
@@ -71,8 +71,8 @@ object Mayan {
   def solve(scanner: Scanner) = {
     val dialect = Dialect.fromScanner(scanner)
 
-    val n1 = Number.fromScanner(dialect, scanner).intValue
-    val n2 = Number.fromScanner(dialect, scanner).intValue
+    val n1 = Number.fromScanner(dialect, scanner).longValue
+    val n2 = Number.fromScanner(dialect, scanner).longValue
 
     val op = scanner.next()
     val result = op match {
@@ -82,6 +82,6 @@ object Mayan {
       case "/" => n1 / n2
     }
 
-    dialect.fromInt(result)
+    dialect.fromLong(result)
   }
 }
