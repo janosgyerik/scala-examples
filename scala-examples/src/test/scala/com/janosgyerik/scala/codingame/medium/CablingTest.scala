@@ -90,20 +90,6 @@ class CablingTest extends FunSuite {
     assert(6066790161L == minLength(parseInput(input6)))
   }
 
-  test("# of lines in input7") {
-    assert(100001 == Source.fromFile("src/test/resources/codingame/medium/cabling/in7.txt").getLines().size)
-  }
-
-  test("minLength, input7") {
-    assert(3142894 == minLength(parseInput(
-      Source.fromFile("src/test/resources/codingame/medium/cabling/in7.txt").getLines().toIterable)))
-  }
-
-  test("minLength, input8") {
-    assert(2500049998L == minLength(parseInput(
-      Source.fromFile("src/test/resources/codingame/medium/cabling/in8.txt").getLines().toIterable)))
-  }
-
   test("countSmaller 0 0 1 1 1 2 3 4 4 4 4 4 5") {
     assert(List(0, 0, 2, 2, 2, 5, 6, 7, 7, 7, 7, 7, 12) == countSmaller(List(0, 0, 1, 1, 1, 2, 3, 4, 4, 4, 4, 4, 5)))
   }
