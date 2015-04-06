@@ -75,12 +75,7 @@ class MayanTest extends FunSuite {
 
   val testdir = "src/test/resources/codingame/medium/mayan"
 
-  test("input1") {
-    assert(Source.fromFile(testdir + "/out1.txt").mkString
-      == solve(new Scanner(new File(testdir + "/in1.txt"))).toString)
-  }
-
-  for (i <- 2 to 12) {
+  for (i <- 1 to 12) {
     test("input" + i) {
       assert(Source.fromFile(testdir + "/out" + i + ".txt").mkString
         == solve(new Scanner(new File(testdir + "/in" + i + ".txt"))).toString)
