@@ -70,4 +70,12 @@ class MayanTest extends FunSuite {
     )).intValue)
   }
 
+  test("converting 4805 to mayan") {
+    val mayan = dialect.fromInt(4805)
+    assert(4805 == mayan.intValue)
+
+    val digits = mayan.digits
+    assert(Vector(12, 0, 5) == digits.map(x => x.intValue))
+  }
+
 }

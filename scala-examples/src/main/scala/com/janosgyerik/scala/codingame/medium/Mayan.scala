@@ -24,7 +24,7 @@ object Mayan {
         case 0 => List()
         case x => digits(num % Dialect.radix) :: inner(num / Dialect.radix)
       }
-      new Number(inner(intValue).toIndexedSeq)
+      new Number(inner(intValue).toIndexedSeq.reverse)
     }
   }
 
@@ -53,7 +53,7 @@ object Mayan {
     override def toString = s"Digit($lines, $intValue)"
   }
 
-  class Number(digits: IndexedSeq[Digit]) {
+  class Number(val digits: IndexedSeq[Digit]) {
     lazy val intValue: Int = digits.foldLeft(0)((x, y) => Dialect.radix * x + y.intValue)
   }
 
