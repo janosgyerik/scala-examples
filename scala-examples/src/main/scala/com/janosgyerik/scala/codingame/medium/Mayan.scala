@@ -50,11 +50,13 @@ object Mayan {
   }
 
   class Digit(val lines: IndexedSeq[String], val intValue: Int) {
-    override def toString = s"Digit($lines, $intValue)"
+    override def toString = lines.foldLeft("")((x, y) => x + y + "\n")
   }
 
   class Number(val digits: IndexedSeq[Digit]) {
     lazy val intValue: Int = digits.foldLeft(0)((x, y) => Dialect.radix * x + y.intValue)
+
+    override def toString = digits.foldLeft("")((x, y) => x + y)
   }
 
   object Number {
@@ -67,8 +69,6 @@ object Mayan {
   }
 
   def solve(scanner: Scanner) = {
-    val scanner = new Scanner("")
-
     val dialect = Dialect.fromScanner(scanner)
 
     val n1 = Number.fromScanner(dialect, scanner).intValue

@@ -1,10 +1,13 @@
 package com.janosgyerik.scala.codingame.medium
 
+import java.io.File
 import java.util.Scanner
 
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+
+import scala.io.Source
 
 @RunWith(classOf[JUnitRunner])
 class MayanTest extends FunSuite {
@@ -27,19 +30,11 @@ class MayanTest extends FunSuite {
   }
 
   test("dialect digit 7") {
-    assert("Digit(Vector(oo.., ____, ...., ....), 7)" == dialect.digits(7).toString)
-  }
-
-  test("dialect digit 12") {
-    assert("Digit(Vector(oo.., ____, ____, ....), 12)" == dialect.digits(12).toString)
-  }
-
-  test("dialect digit 0") {
-    assert("Digit(Vector(.oo., o..o, .oo., ....), 0)" == dialect.digits.head.toString)
-  }
-
-  test("dialect digit 5") {
-    assert("Digit(Vector(...., ____, ...., ....), 5)" == dialect.digits(5).toString)
+    assert(
+      "oo..\n" +
+        "____\n" +
+        "....\n" +
+        "....\n" == dialect.digits(7).toString)
   }
 
   test("parsing mayan 4805") {
@@ -76,6 +71,20 @@ class MayanTest extends FunSuite {
 
     val digits = mayan.digits
     assert(Vector(12, 0, 5) == digits.map(x => x.intValue))
+  }
+
+  val testdir = "src/test/resources/codingame/medium/mayan"
+
+  test("input1") {
+    assert(Source.fromFile(testdir + "/out1.txt").mkString
+      == solve(new Scanner(new File(testdir + "/in1.txt"))).toString)
+  }
+
+  for (i <- 2 to 12) {
+    test("input" + i) {
+      assert(Source.fromFile(testdir + "/out" + i + ".txt").mkString
+        == solve(new Scanner(new File(testdir + "/in" + i + ".txt"))).toString)
+    }
   }
 
 }
