@@ -24,7 +24,9 @@ object Mayan {
         case 0 => List()
         case x => digits((num % Dialect.radix).asInstanceOf[Int]) :: inner(num / Dialect.radix)
       }
-      new Number(inner(longValue).toIndexedSeq.reverse)
+      val seq = inner(longValue).toIndexedSeq.reverse
+      if (seq.isEmpty) new Number(IndexedSeq(digits.head))
+      else new Number(seq)
     }
   }
 
