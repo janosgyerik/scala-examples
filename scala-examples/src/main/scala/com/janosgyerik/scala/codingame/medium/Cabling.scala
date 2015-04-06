@@ -48,13 +48,26 @@ object Cabling {
   }
 
   def countSmaller(ints: List[Int]) = {
-    def inner(remaining: List[Int], current: Int, count: Int, total: Int): List[Int] = remaining match {
-      case List() => List()
-      case x :: xs =>
-        if (x == current) List(count) ++ inner(xs, current, count, total + 1)
-        else List(total) ++ inner(xs, x, total, total + 1)
+    var count = 0
+    var total = 0
+    var current = ints.head
+    for {
+      x <- ints
+    } yield {
+      if (x != current) {
+        count = total
+        current = x
+      }
+      total = total + 1
+      count
     }
-    List(0) ++ inner(ints.tail, ints.head, 0, 1)
+    //    def inner(remaining: List[Int], current: Int, count: Int, total: Int): List[Int] = remaining match {
+    //      case List() => List()
+    //      case x :: xs =>
+    //        if (x == current) List(count) ++ inner(xs, current, count, total + 1)
+    //        else List(total) ++ inner(xs, x, total, total + 1)
+    //    }
+    //    List(0) ++ inner(ints.tail, ints.head, 0, 1)
   }
 
   def countBigger(ints: List[Int]) = {

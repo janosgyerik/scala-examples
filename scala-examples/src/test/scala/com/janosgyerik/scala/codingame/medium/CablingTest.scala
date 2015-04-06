@@ -88,9 +88,8 @@ class CablingTest extends FunSuite {
   }
 
   test("minLength, input7") {
-    // TODO TLE / StackOverflow
-//        assert(3142894 == minLength(parseInput(
-//          Source.fromFile("src/test/resources/codingame/medium/cabling/in7.txt").getLines().toIterable)))
+    assert(3142894 == minLength(parseInput(
+      Source.fromFile("src/test/resources/codingame/medium/cabling/in7.txt").getLines().toIterable)))
   }
 
   test("countSmaller 0 0 1 1 1 2 3 4 4 4 4 4 5") {
