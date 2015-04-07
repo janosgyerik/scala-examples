@@ -46,11 +46,8 @@ object Teads {
 
     def distance(n1: Node, n2: Node) = 1
 
-    def maxDistance(node: Node) = {
-      {
-        for {n2 <- nodes if n2 != node} yield distance(node, n2)
-      }.max
-    }
+    def maxDistance(node: Node) =
+      nodes.filter(x => x != node).map(x => distance(node, x)).max
 
     nodes.map(node => maxDistance(node)).min
   }
