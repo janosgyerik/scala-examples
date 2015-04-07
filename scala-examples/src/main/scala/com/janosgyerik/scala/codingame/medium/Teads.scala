@@ -34,10 +34,24 @@ object Teads {
       val parts = line.split(" ").take(2)
       (parts(0), parts(1))
     }
-    { nodes ++ nodes.map(x => x.swap) } map(x => new Link(x._1, x._2, 1))
+    {
+      nodes ++ nodes.map(x => x.swap)
+    } map (x => new Link(x._1, x._2, 1))
   }
 
-  def minMaxDistance(links: IndexedSeq[Link]) = ???
+  def minMaxDistance(neighborLinks: IndexedSeq[Link]) = {
+    val nodes = neighborLinks.map(link => link.n1).toSet
 
-  def distance(n1: Node, n2: Node) = ???
+    //    val selfLinks = nodes.map(node => new Link(node, node, 0))
+
+    def distance(n1: Node, n2: Node) = 1
+
+    def maxDistance(node: Node) = {
+      {
+        for {n2 <- nodes if n2 != node} yield distance(node, n2)
+      }.max
+    }
+
+    nodes.map(node => maxDistance(node)).min
+  }
 }
