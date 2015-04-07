@@ -39,4 +39,8 @@ class TeadsTest extends FunSuite {
     }
   }
 
+  test("verify single input 1") {
+    verifyInput(1)
+  }
+
 }
