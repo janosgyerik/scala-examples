@@ -15,7 +15,8 @@ class TeadsTest extends FunSuite {
   import com.janosgyerik.scala.codingame.medium.Teads._
 
   test("parseInput, input1") {
-    assert("Vector((0,1), (1,2), (2,3), (2,4))" == parseInput(inputScanner(1)).toString())
+    assert("Vector(Link(0, 1, 1), Link(1, 2, 1), Link(2, 3, 1), Link(2, 4, 1), " +
+      "Link(1, 0, 1), Link(2, 1, 1), Link(3, 2, 1), Link(4, 2, 1))" == parseInput(inputScanner(1)).toString())
   }
 
   val testdir = "src/test/resources/codingame/medium/teads"
