@@ -39,8 +39,8 @@ class TeadsTest extends FunSuite {
     }
   }
 
-  test("verify single input 5") {
-    verifyInput(5)
+  test("verify single input 6") {
+    verifyInput(6)
   }
 
   def linksFromInput(index: Int) = parseInput(inputScanner(index))
