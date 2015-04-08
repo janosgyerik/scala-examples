@@ -43,4 +43,26 @@ class TeadsTest extends FunSuite {
     verifyInput(1)
   }
 
+  def linksFromInput(index: Int) = parseInput(inputScanner(index))
+
+  test("findNodesWithinDistance for input1, node0, 0") {
+    val links = linksFromInput(1)
+    assert(1 == findNodesWithinDistance(links.toSet, links.head.n1, 0).size)
+  }
+
+  test("findNodesWithinDistance for input1, node0, 1") {
+    val links = linksFromInput(1)
+    assert(2 == findNodesWithinDistance(links.toSet, links.head.n1, 1).size)
+  }
+
+  test("findNodesWithinDistance for input1, node0, 2") {
+    val links = linksFromInput(1)
+    assert(3 == findNodesWithinDistance(links.toSet, links.head.n1, 2).size)
+  }
+
+  test("findNodesWithinDistance for input1, node0, 3") {
+    val links = linksFromInput(1)
+    assert(5 == findNodesWithinDistance(links.toSet, links.head.n1, 3).size)
+  }
+
 }

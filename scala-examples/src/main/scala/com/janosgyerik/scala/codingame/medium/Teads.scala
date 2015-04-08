@@ -11,6 +11,20 @@ object Solution extends App {
 
 class Node(val id: String) {
   override def toString = s"Node($id)"
+
+  def canEqual(other: Any): Boolean = other.isInstanceOf[Node]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: Node =>
+      (that canEqual this) &&
+        id == that.id
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(id)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+  }
 }
 
 class Link(val n1: Node, val n2: Node) {
@@ -67,5 +81,20 @@ object Teads {
       }
     }
     0
+  }
+
+  def findNodesWithinDistance(links: Set[Link], node: Node, distance: Int) = {
+    def findNodesWithinDistance(visited: Set[Node], d: Int): Set[Node] = {
+      if (d == 0) visited
+      else {
+        val neighbors1 = for {link <- links if visited.contains(link.n1) && !visited.contains(link.n2)} yield link.n2
+        val neighbors2 = for {link <- links if visited.contains(link.n2) && !visited.contains(link.n1)} yield link.n1
+        val neighbors = neighbors1 ++ neighbors2
+        val newVisited = visited ++ neighbors
+        if (neighbors.nonEmpty) findNodesWithinDistance(newVisited, d - 1)
+        else newVisited
+      }
+    }
+    findNodesWithinDistance(Set(node), distance)
   }
 }
