@@ -61,7 +61,7 @@ object Teads {
         index = index + 1
       }
     }
-    0
+    throw new IllegalStateException("unreachable line: all nodes must be found by now")
   }
 
   def findNodesWithinDistance(links: Set[Link], node: Node, distance: Int) = {
