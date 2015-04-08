@@ -9,17 +9,15 @@ object Solution extends App {
   println(answer)
 }
 
-//class Node(id: Int, val neighbors: Set[Node]) {
-//
-//}
+class Node(val id: String) {
+  override def toString = s"Node($id)"
+}
+
+class Link(val n1: Node, val n2: Node) {
+  override def toString = s"Link($n1, $n2)"
+}
 
 object Teads {
-
-  type Node = String
-
-  class Link(val n1: Node, val n2: Node, val distance: Int) {
-    override def toString = s"Link($n1, $n2, $distance)"
-  }
 
   def solve(scanner: Scanner) = {
     minMaxDistance(parseInput(scanner))
@@ -32,22 +30,19 @@ object Teads {
     for {_ <- 1 to linesCount} yield {
       val line = scanner.nextLine()
       val parts = line.split(" ").take(2)
-      (parts(0), parts(1))
+      new Link(new Node(parts(0)), new Node(parts(1)))
     }
-//    {
-//      nodes ++ nodes.map(x => x.swap)
-//    } map (x => new Link(x._1, x._2, 1))
   }
 
-  def minMaxDistance(links: IndexedSeq[(Node, Node)]): Int = {
-    val nodes = links.map(link => link._1).toSet
+  def minMaxDistance(links: IndexedSeq[Link]): Int = {
+    val nodes = links.map(link => link.n1).toSet
 
     //    val selfLinks = nodes.map(node => new Link(node, node, 0))
 
-    def mkDistanceMap(): Map[(Node, Node), Int] = {
-      val selfLinks = nodes.map(x => (x, x) -> 0)
+    def mkDistanceMap(): Map[Link, Int] = {
+      val selfLinks = nodes.map(x => new Link(x, x) -> 0)
       val links1 = links.map(x => x -> 1)
-      val links2 = links.map(x => x.swap -> 1)
+      val links2 = links.map(x => new Link(x.n2, x.n1) -> 1)
       val initial = (selfLinks ++ links1 ++ links2).toMap
       initial
     }
