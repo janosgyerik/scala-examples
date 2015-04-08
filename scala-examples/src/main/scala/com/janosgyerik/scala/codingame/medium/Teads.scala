@@ -39,7 +39,7 @@ object Teads {
 //    } map (x => new Link(x._1, x._2, 1))
   }
 
-  def minMaxDistance(links: IndexedSeq[(Node, Node)]) = {
+  def minMaxDistance(links: IndexedSeq[(Node, Node)]): Int = {
     val nodes = links.map(link => link._1).toSet
 
     //    val selfLinks = nodes.map(node => new Link(node, node, 0))
@@ -52,16 +52,25 @@ object Teads {
       initial
     }
 
-    val distanceMap = mkDistanceMap()
-
-    def distance(n1: Node, n2: Node) = distanceMap.get((n1, n2)).get
-
-    def maxDistance(node: Node) =
-      nodes.filter(x => x != node).map(x => distance(node, x)).max
+//    val distanceMap = mkDistanceMap()
+//
+//    def distance(n1: Node, n2: Node) = distanceMap.get((n1, n2)).get
+//
+//    def maxDistance(node: Node) =
+//      nodes.filter(x => x != node).map(x => distance(node, x)).max
 
     // TODO: alternate algorithm:
     // for {distance <- 1 to nodes.size; n <- nodes; if (allNodesReachable(n, distance)) return distance}
 
-    nodes.map(node => maxDistance(node)).min
+//    nodes.map(node => maxDistance(node)).min
+
+    def countReachableNodes(node: Node, i: Int): Int = ???
+
+    for (distance <- 1 to nodes.size) {
+      for (node <- nodes) {
+        if (countReachableNodes(node, distance) == nodes.size) return distance
+      }
+    }
+    0
   }
 }
