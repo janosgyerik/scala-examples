@@ -15,8 +15,7 @@ class TeadsTest extends FunSuite {
   import com.janosgyerik.scala.codingame.medium.Teads._
 
   test("parseInput, input1") {
-    assert("Vector(Link(0, 1, 1), Link(1, 2, 1), Link(2, 3, 1), Link(2, 4, 1), " +
-      "Link(1, 0, 1), Link(2, 1, 1), Link(3, 2, 1), Link(4, 2, 1))" == parseInput(inputScanner(1)).toString())
+    assert("Vector(Link(0, 1), Link(1, 2), Link(2, 3), Link(2, 4))" == parseInput(inputScanner(1)).toString())
   }
 
   val testdir = "src/test/resources/codingame/medium/teads"
@@ -40,30 +39,34 @@ class TeadsTest extends FunSuite {
     }
   }
 
-  test("verify single input 1") {
-    verifyInput(1)
+  test("verify single input 5") {
+    verifyInput(5)
   }
 
   def linksFromInput(index: Int) = parseInput(inputScanner(index))
 
   test("findNodesWithinDistance for input1, node0, 0") {
     val links = linksFromInput(1)
-    assert(1 == findNodesWithinDistance(links.toSet, links.head.n1, 0).size)
+    val neighborMap = getNeighborMap(links)
+    assert(1 == findNodesWithinDistance(neighborMap, links.toSet, links.head.n1, 0).size)
   }
 
   test("findNodesWithinDistance for input1, node0, 1") {
     val links = linksFromInput(1)
-    assert(2 == findNodesWithinDistance(links.toSet, links.head.n1, 1).size)
+    val neighborMap = getNeighborMap(links)
+    assert(2 == findNodesWithinDistance(neighborMap, links.toSet, links.head.n1, 1).size)
   }
 
   test("findNodesWithinDistance for input1, node0, 2") {
     val links = linksFromInput(1)
-    assert(3 == findNodesWithinDistance(links.toSet, links.head.n1, 2).size)
+    val neighborMap = getNeighborMap(links)
+    assert(3 == findNodesWithinDistance(neighborMap, links.toSet, links.head.n1, 2).size)
   }
 
   test("findNodesWithinDistance for input1, node0, 3") {
     val links = linksFromInput(1)
-    assert(5 == findNodesWithinDistance(links.toSet, links.head.n1, 3).size)
+    val neighborMap = getNeighborMap(links)
+    assert(5 == findNodesWithinDistance(neighborMap, links.toSet, links.head.n1, 3).size)
   }
 
 }

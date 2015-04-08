@@ -10,7 +10,7 @@ object Solution extends App {
 }
 
 class Node(val id: String) {
-  override def toString = s"Node($id)"
+  override def toString = s"$id"
 
   def canEqual(other: Any): Boolean = other.isInstanceOf[Node]
 
@@ -29,6 +29,8 @@ class Node(val id: String) {
 
 class Link(val n1: Node, val n2: Node) {
   override def toString = s"Link($n1, $n2)"
+
+  def swap = new Link(n2, n1)
 }
 
 object Teads {
@@ -48,8 +50,17 @@ object Teads {
     }
   }
 
+  def getNeighborMap(links: IndexedSeq[Link]) = {
+    val neighborMap = (links ++ links.map(x => x.swap))
+      .map(x => (x.n1, x.n2))
+      .groupBy { case (n1, _) => n1 } map { case (n1, y) => (n1, y.map { case (_, n2) => n2 }) }
+    neighborMap
+  }
+
   def minMaxDistance(links: IndexedSeq[Link]): Int = {
     val nodes = links.map(link => link.n1).toSet ++ links.map(link => link.n2).toSet
+
+    val neighborMap = getNeighborMap(links)
 
     var distance = 0
     while (true) {
@@ -57,25 +68,26 @@ object Teads {
       var index = 0
       while (index < nodes.size) {
         val node = nodes.toList(index)
-        if (findNodesWithinDistance(links.toSet, node, distance).size == nodes.size) return distance
+        if (findNodesWithinDistance(neighborMap, links.toSet, node, distance).size == nodes.size) return distance
         index = index + 1
       }
     }
     throw new IllegalStateException("unreachable line: all nodes must be found by now")
   }
 
-  def findNodesWithinDistance(links: Set[Link], node: Node, distance: Int) = {
-    def findNodesWithinDistance(visited: Set[Node], d: Int): Set[Node] = {
-      if (d == 0) visited
+  def findNodesWithinDistance(neighborMap: Map[Node, IndexedSeq[Node]], links: Set[Link], node: Node, distance: Int) = {
+    def findNodesWithinDistance(visited: Set[Node], neighbors: IndexedSeq[Node], d: Int): Set[Node] = {
+      if (d == 0 || neighbors.isEmpty) visited
       else {
-        val neighbors1 = for {link <- links if visited.contains(link.n1) && !visited.contains(link.n2)} yield link.n2
-        val neighbors2 = for {link <- links if visited.contains(link.n2) && !visited.contains(link.n1)} yield link.n1
-        val neighbors = neighbors1 ++ neighbors2
         val newVisited = visited ++ neighbors
-        if (neighbors.nonEmpty) findNodesWithinDistance(newVisited, d - 1)
-        else newVisited
+        val newNeighbors = for {
+          node <- neighbors
+          neighbor <- neighborMap.get(node).get if !newVisited.contains(neighbor)
+        } yield neighbor
+
+        findNodesWithinDistance(newVisited, newNeighbors, d - 1)
       }
     }
-    findNodesWithinDistance(Set(node), distance)
+    findNodesWithinDistance(Set(node), neighborMap.get(node).get, distance)
   }
 }
