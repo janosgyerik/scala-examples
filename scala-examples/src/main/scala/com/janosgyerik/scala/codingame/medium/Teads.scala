@@ -59,7 +59,7 @@ object Teads {
 
   def minMaxDistance(links: IndexedSeq[Link]): Int = {
     val neighborMap = getNeighborMap(links)
-    val nodes = neighborMap.keys.toList
+    val nodes = neighborMap.toList.sortBy { case (_, neighbors) => neighbors.size }.reverseMap(x => x._1)
 
     var distance = 0
     while (true) {
