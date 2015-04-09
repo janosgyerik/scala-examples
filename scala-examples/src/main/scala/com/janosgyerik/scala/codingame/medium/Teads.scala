@@ -2,8 +2,6 @@ package com.janosgyerik.scala.codingame.medium
 
 import java.util.Scanner
 
-import scala.collection.immutable.IndexedSeq
-
 object Solution extends App {
   val answer = Teads.solve(new Scanner(System.in))
   println(answer)
@@ -43,21 +41,21 @@ object Teads {
     val linesCount = scanner.nextInt()
     scanner.nextLine()
 
-    for {_ <- 1 to linesCount} yield {
+    (for {_ <- 1 to linesCount} yield {
       val line = scanner.nextLine()
       val parts = line.split(" ").take(2)
       new Link(new Node(parts(0)), new Node(parts(1)))
-    }
+    }).toSet
   }
 
-  def mkNeighborMap(links: IndexedSeq[Link]) = {
+  def mkNeighborMap(links: Set[Link]) = {
     val neighborMap = (links ++ links.map(_.swap))
       .map(x => (x.n1, x.n2))
       .groupBy { case (n1, _) => n1 } map { case (n1, y) => (n1, y.map { case (_, n2) => n2 }) }
     neighborMap
   }
 
-  def minMaxDistance(links: IndexedSeq[Link]): Int = {
+  def minMaxDistance(links: Set[Link]): Int = {
     val neighborMap = mkNeighborMap(links)
     val nodes = neighborMap.toList.sortBy { case (_, neighbors) => neighbors.size }.reverseMap(_._1)
 
@@ -74,8 +72,8 @@ object Teads {
     throw new IllegalStateException("unreachable line: all nodes must be found by now")
   }
 
-  def findNodesWithinDistance(neighborMap: Map[Node, IndexedSeq[Node]], links: Set[Link], node: Node, distance: Int) = {
-    def findNodesWithinDistance(visited: Set[Node], neighbors: IndexedSeq[Node], d: Int): Set[Node] = {
+  def findNodesWithinDistance(neighborMap: Map[Node, Set[Node]], links: Set[Link], node: Node, distance: Int) = {
+    def findNodesWithinDistance(visited: Set[Node], neighbors: Set[Node], d: Int): Set[Node] = {
       if (d == 0 || neighbors.isEmpty) visited
       else {
         val newVisited = visited ++ neighbors
