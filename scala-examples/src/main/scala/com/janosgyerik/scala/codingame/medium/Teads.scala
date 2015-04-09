@@ -48,11 +48,11 @@ object Teads {
     }).toSet
   }
 
-  def mkNeighborMap(links: Set[Link]) = {
-    val neighborMap = (links ++ links.map(_.swap))
-      .map(x => (x.n1, x.n2))
-      .groupBy { case (n1, _) => n1 } map { case (n1, y) => (n1, y.map { case (_, n2) => n2 }) }
-    neighborMap
+  def mkNeighborMap(links0: Set[Link]) = {
+    val reversedLinks = links0.map(_.swap)
+    val links = links0 ++ reversedLinks
+    val nodePairs = links.map(link => (link.n1, link.n2))
+    nodePairs.groupBy(_._1).map { case (n1, pairs) => (n1, pairs.map(_._2)) }
   }
 
   def minMaxDistance(links: Set[Link]): Int = {
