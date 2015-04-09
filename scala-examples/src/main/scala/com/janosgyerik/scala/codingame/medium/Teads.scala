@@ -50,7 +50,7 @@ object Teads {
     }
   }
 
-  def getNeighborMap(links: IndexedSeq[Link]) = {
+  def mkNeighborMap(links: IndexedSeq[Link]) = {
     val neighborMap = (links ++ links.map(_.swap))
       .map(x => (x.n1, x.n2))
       .groupBy { case (n1, _) => n1 } map { case (n1, y) => (n1, y.map { case (_, n2) => n2 }) }
@@ -58,7 +58,7 @@ object Teads {
   }
 
   def minMaxDistance(links: IndexedSeq[Link]): Int = {
-    val neighborMap = getNeighborMap(links)
+    val neighborMap = mkNeighborMap(links)
     val nodes = neighborMap.toList.sortBy { case (_, neighbors) => neighbors.size }.reverseMap(_._1)
 
     var distance = 0

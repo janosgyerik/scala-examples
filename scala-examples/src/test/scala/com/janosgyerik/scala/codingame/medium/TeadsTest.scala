@@ -47,25 +47,25 @@ class TeadsTest extends FunSuite {
 
   test("findNodesWithinDistance for input1, node0, 0") {
     val links = linksFromInput(1)
-    val neighborMap = getNeighborMap(links)
+    val neighborMap = mkNeighborMap(links)
     assert(1 == findNodesWithinDistance(neighborMap, links.toSet, links.head.n1, 0).size)
   }
 
   test("findNodesWithinDistance for input1, node0, 1") {
     val links = linksFromInput(1)
-    val neighborMap = getNeighborMap(links)
+    val neighborMap = mkNeighborMap(links)
     assert(2 == findNodesWithinDistance(neighborMap, links.toSet, links.head.n1, 1).size)
   }
 
   test("findNodesWithinDistance for input1, node0, 2") {
     val links = linksFromInput(1)
-    val neighborMap = getNeighborMap(links)
+    val neighborMap = mkNeighborMap(links)
     assert(3 == findNodesWithinDistance(neighborMap, links.toSet, links.head.n1, 2).size)
   }
 
   test("findNodesWithinDistance for input1, node0, 3") {
     val links = linksFromInput(1)
-    val neighborMap = getNeighborMap(links)
+    val neighborMap = mkNeighborMap(links)
     assert(5 == findNodesWithinDistance(neighborMap, links.toSet, links.head.n1, 3).size)
   }
 
