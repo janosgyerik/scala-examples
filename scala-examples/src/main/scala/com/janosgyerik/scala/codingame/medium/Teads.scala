@@ -72,7 +72,9 @@ object Teads {
     throw new IllegalStateException("unreachable line: all nodes must be found by now")
   }
 
-  def findNodesWithinDistance(neighborMap: Map[Node, Set[Node]], links: Set[Link], node: Node, distance: Int) = {
+  type NeighborMap = Map[Node, Set[Node]]
+
+  def findNodesWithinDistance(neighborMap: NeighborMap, links: Set[Link], node: Node, distance: Int) = {
     def findNodesWithinDistance(visited: Set[Node], neighbors: Set[Node], d: Int): Set[Node] = {
       if (d == 0 || neighbors.isEmpty) visited
       else {
