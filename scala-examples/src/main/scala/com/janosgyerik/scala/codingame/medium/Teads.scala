@@ -9,8 +9,8 @@ object Solution extends App {
 
 object Teads {
 
-  def solve(scanner: Scanner, verbose: Boolean = false) = {
-    minMaxDistance(parseInput(scanner), verbose)
+  def solve(scanner: Scanner) = {
+    minMaxDistance(parseInput(scanner))
   }
 
   case class Node(id: String) {
@@ -57,77 +57,17 @@ object Teads {
     nodePairs.groupBy(_._1).map { case (n1, pairs) => (n1, pairs.map(_._2)) }
   }
 
-  def mergeConnMaps(m1: ConnMap, m2: ConnMap) = {
-    def flatten(m: ConnMap) =
-      m.toList.flatMap(x => for {n2 <- x._2} yield (x._1, n2))
-
-    (flatten(m1) ++ flatten(m2)).groupBy(_._1).map { case (n, list) => n -> list.map(_._2).toSet }
-  }
-
-  def minMaxDistance(links: Set[Link], verbose: Boolean = false): Int = {
+  def minMaxDistance(links: Set[Link]): Int = {
     val neighbors = mkConnMap(links)
-//    val nodes = neighbors.toList.sortBy { case (_, neighbors) => neighbors.size }.reverseMap(_._1)
-    val nodes = links.flatMap { case link => List(link.n1, link.n2) }
 
-    def inner(conn: ConnMap, explore: ConnMap, d: Int): Int = {
-      if (verbose) printStats(conn, explore, d)
-
-      val nextConn = mergeConnMaps(conn, explore)
-
-      if (fullReachExists(nextConn)) d + 1
+    def countReductionSteps(conn: ConnMap, steps: Int): Int = {
+      if (conn.size < 2) steps
       else {
-        val nextExplore = getNextExplore(conn, explore)
-        inner(nextConn, nextExplore, d + 1)
+        val nonFinalConn = conn.filter { case (n, nx) => nx.size > 1 }
+        val nextConn = nonFinalConn.map { case (n, nx) => n -> nx.filter(nonFinalConn.contains) }
+        countReductionSteps(nextConn, steps + 1)
       }
     }
-
-    def printStats(conn: ConnMap, explore: ConnMap, d: Int): Unit = {
-      println("nodes: %d".format(explore.size))
-      println("depth: %d".format(d))
-      printConnMapStats("conn", conn)
-      printConnMapStats("explore", explore)
-      println("---")
-    }
-
-    def printConnMapStats(name: String, map: ConnMap): Unit = {
-      println("%s min: %d".format(name, map.values.map(_.size).min))
-      println("%s max: %d".format(name, map.values.map(_.size).max))
-      println("%s avg: %s".format(name, map.values.map(_.size).sum / 1.0 / nodes.size))
-    }
-
-    def getNextExplore(conn: ConnMap, explore: ConnMap) = {
-      val averageCovered = conn.values.map(_.size).sum / 1.0 / conn.size
-      val averageExplored = explore.values.map(_.size).sum / 1.0 / explore.size
-
-      val links = for {
-        n <- nodes if conn.get(n).get.size >= averageCovered && explore.getOrElse(n, Set.empty).size > averageExplored
-        x <- explore.get(n).get
-        n2 <- neighbors.get(x).get if !conn.get(n).get.contains(n2)
-      } yield Link(n, n2)
-      mkConnMap(links)
-    }
-
-    def fullReachExists(conn: ConnMap) =
-      conn.values.map(_.size).toSet.contains(nodes.size)
-
-    val selfMap = nodes.map(x => x -> Set(x)).toMap
-
-    inner(selfMap, neighbors, 0)
-  }
-
-  def findNodesWithinDistance(neighborMap: ConnMap, links: Set[Link], node: Node, distance: Int) = {
-    def findNodesWithinDistance(visited: Set[Node], neighbors: Set[Node], d: Int): Set[Node] = {
-      if (d == 0 || neighbors.isEmpty) visited
-      else {
-        val newVisited = visited ++ neighbors
-        val newNeighbors = for {
-          node <- neighbors
-          neighbor <- neighborMap.get(node).get if !newVisited.contains(neighbor)
-        } yield neighbor
-
-        findNodesWithinDistance(newVisited, newNeighbors, d - 1)
-      }
-    }
-    findNodesWithinDistance(Set(node), neighborMap.get(node).get, distance)
+    countReductionSteps(neighbors, 0)
   }
 }
