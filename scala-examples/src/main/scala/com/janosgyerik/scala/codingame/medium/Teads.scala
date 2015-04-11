@@ -9,8 +9,8 @@ object Solution extends App {
 
 object Teads {
 
-  def solve(scanner: Scanner) = {
-    minMaxDistance(parseInput(scanner))
+  def solve(scanner: Scanner, verbose: Boolean = false) = {
+    minMaxDistance(parseInput(scanner), verbose)
   }
 
   case class Node(id: String) {
@@ -64,7 +64,7 @@ object Teads {
     (flatten(m1) ++ flatten(m2)).groupBy(_._1).map { case (n, list) => n -> list.map(_._2).toSet }
   }
 
-  def minMaxDistance(links: Set[Link]): Int = {
+  def minMaxDistance(links: Set[Link], verbose: Boolean = false): Int = {
     val neighbors = mkConnMap(links)
 //    val nodes = neighbors.toList.sortBy { case (_, neighbors) => neighbors.size }.reverseMap(_._1)
     val nodes = links.flatMap { case link => List(link.n1, link.n2) }
@@ -72,10 +72,23 @@ object Teads {
     def inner(conn: ConnMap, explore: ConnMap, d: Int): Int = {
       if (fullReachExists(conn)) d
       else {
-//        println(d)
+        if (verbose) printStats(conn, explore, d)
         val nextExplore = getNextExplore(conn, explore)
         inner(mergeConnMaps(conn, explore), nextExplore, d + 1)
       }
+    }
+
+    def printStats(conn: ConnMap, explore: ConnMap, d: Int): Unit = {
+      println("---")
+      println("depth: %d".format(d))
+      printConnMapStats("conn", conn)
+      printConnMapStats("explore", explore)
+    }
+
+    def printConnMapStats(name: String, map: ConnMap): Unit = {
+      println("%s min: %d".format(name, map.values.map(_.size).min))
+      println("%s max: %d".format(name, map.values.map(_.size).max))
+      println("%s avg: %s".format(name, map.values.map(_.size).sum / 1.0 / nodes.size))
     }
 
     def getNextExplore(conn: ConnMap, explore: ConnMap) = {

@@ -26,9 +26,9 @@ class TeadsTest extends FunSuite {
 
   def inputScanner(index: Int): Scanner = new Scanner(new File(testInput(index)))
 
-  def verifyInput(index: Int) = {
+  def verifyInput(index: Int, verbose: Boolean = false) = {
     assert(Source.fromFile(testOutput(index)).mkString.trim
-      == solve(inputScanner(index)).toString)
+      == solve(inputScanner(index), verbose).toString)
   }
 
   //  for (index <- 1 to 10) {
@@ -48,7 +48,7 @@ class TeadsTest extends FunSuite {
   }
 
   test("verify single input 6") {
-//    verifyInput(6)
+//    verifyInput(6, verbose = true)
   }
 
   test("verify single input 7") {
@@ -57,6 +57,10 @@ class TeadsTest extends FunSuite {
 
   test("verify single input 8") {
 //    verifyInput(8)
+  }
+
+  test("verify single input 9") {
+//    verifyInput(9)
   }
 
   test("merge maps") {
