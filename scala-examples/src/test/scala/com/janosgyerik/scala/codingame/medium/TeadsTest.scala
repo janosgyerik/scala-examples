@@ -63,11 +63,11 @@ class TeadsTest extends FunSuite {
   }
 
   test("verify single input 8") {
-//    verifyInput(8)
+//    timeAndVerifyInput(8, verbose = true)
   }
 
   test("verify single input 9") {
-//    verifyInput(9)
+//    timeAndVerifyInput(9, verbose = true)
   }
 
   test("merge maps") {

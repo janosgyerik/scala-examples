@@ -82,6 +82,7 @@ object Teads {
     }
 
     def printStats(conn: ConnMap, explore: ConnMap, d: Int): Unit = {
+      println("nodes: %d".format(nodes.size))
       println("depth: %d".format(d))
       printConnMapStats("conn", conn)
       printConnMapStats("explore", explore)
@@ -103,8 +104,8 @@ object Teads {
       mkConnMap(links)
     }
 
-    def fullReachExists(acc: ConnMap) =
-      acc.values.map(_.size).toSet.contains(nodes.size)
+    def fullReachExists(conn: ConnMap) =
+      conn.values.map(_.size).toSet.contains(nodes.size)
 
     val selfMap = nodes.map(x => x -> Set(x)).toMap
 
