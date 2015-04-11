@@ -7,34 +7,34 @@ object Solution extends App {
   println(answer)
 }
 
-class Node(val id: String) {
-  override def toString = s"$id"
-
-  def canEqual(other: Any): Boolean = other.isInstanceOf[Node]
-
-  override def equals(other: Any): Boolean = other match {
-    case that: Node =>
-      (that canEqual this) &&
-        id == that.id
-    case _ => false
-  }
-
-  override def hashCode(): Int = {
-    val state = Seq(id)
-    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
-  }
-}
-
-class Link(val n1: Node, val n2: Node) {
-  override def toString = s"Link($n1, $n2)"
-
-  def swap = new Link(n2, n1)
-}
-
 object Teads {
 
   def solve(scanner: Scanner) = {
     minMaxDistance(parseInput(scanner))
+  }
+
+  case class Node(id: String) {
+    override def toString = s"$id"
+
+    def canEqual(other: Any): Boolean = other.isInstanceOf[Node]
+
+    override def equals(other: Any): Boolean = other match {
+      case that: Node =>
+        (that canEqual this) &&
+          id == that.id
+      case _ => false
+    }
+
+    override def hashCode(): Int = {
+      val state = Seq(id)
+      state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+    }
+  }
+
+  case class Link(n1: Node, n2: Node) {
+    override def toString = s"Link($n1, $n2)"
+
+    def swap = new Link(n2, n1)
   }
 
   def parseInput(scanner: Scanner) = {
@@ -48,33 +48,54 @@ object Teads {
     }).toSet
   }
 
-  def mkNeighborMap(links0: Set[Link]) = {
+  type ConnMap = Map[Node, Set[Node]]
+
+  def mkConnMap(links0: Set[Link]) = {
     val reversedLinks = links0.map(_.swap)
     val links = links0 ++ reversedLinks
     val nodePairs = links.map(link => (link.n1, link.n2))
     nodePairs.groupBy(_._1).map { case (n1, pairs) => (n1, pairs.map(_._2)) }
   }
 
-  def minMaxDistance(links: Set[Link]): Int = {
-    val neighborMap = mkNeighborMap(links)
-    val nodes = neighborMap.toList.sortBy { case (_, neighbors) => neighbors.size }.reverseMap(_._1)
+  def mergeConnMaps(m1: ConnMap, m2: ConnMap) = {
+    def flatten(m: ConnMap) =
+      m.toList.flatMap(x => for {n2 <- x._2} yield (x._1, n2))
 
-    var distance = 0
-    while (true) {
-      distance = distance + 1
-      var index = 0
-      while (index < nodes.size) {
-        val node = nodes(index)
-        if (findNodesWithinDistance(neighborMap, links.toSet, node, distance).size == nodes.size) return distance
-        index = index + 1
-      }
-    }
-    throw new IllegalStateException("unreachable line: all nodes must be found by now")
+    (flatten(m1) ++ flatten(m2)).groupBy(_._1).map { case (n, list) => n -> list.map(_._2).toSet }
   }
 
-  type NeighborMap = Map[Node, Set[Node]]
+  def minMaxDistance(links: Set[Link]): Int = {
+    val neighbors = mkConnMap(links)
+//    val nodes = neighbors.toList.sortBy { case (_, neighbors) => neighbors.size }.reverseMap(_._1)
+    val nodes = links.flatMap { case link => List(link.n1, link.n2) }
 
-  def findNodesWithinDistance(neighborMap: NeighborMap, links: Set[Link], node: Node, distance: Int) = {
+    def inner(conn: ConnMap, explore: ConnMap, d: Int): Int = {
+      if (fullReachExists(conn)) d
+      else {
+//        println(d)
+        val nextExplore = getNextExplore(conn, explore)
+        inner(mergeConnMaps(conn, explore), nextExplore, d + 1)
+      }
+    }
+
+    def getNextExplore(conn: ConnMap, explore: ConnMap) = {
+      val links = for {
+        n <- nodes
+        x <- explore.get(n).get
+        n2 <- neighbors.get(x).get if !conn.get(n).get.contains(n2)
+      } yield Link(n, n2)
+      mkConnMap(links)
+    }
+
+    def fullReachExists(acc: ConnMap) =
+      acc.values.map(_.size).toSet.contains(nodes.size)
+
+    val selfMap = nodes.map(x => x -> Set(x)).toMap
+
+    inner(selfMap, neighbors, 0)
+  }
+
+  def findNodesWithinDistance(neighborMap: ConnMap, links: Set[Link], node: Node, distance: Int) = {
     def findNodesWithinDistance(visited: Set[Node], neighbors: Set[Node], d: Int): Set[Node] = {
       if (d == 0 || neighbors.isEmpty) visited
       else {
