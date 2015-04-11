@@ -70,20 +70,22 @@ object Teads {
     val nodes = links.flatMap { case link => List(link.n1, link.n2) }
 
     def inner(conn: ConnMap, explore: ConnMap, d: Int): Int = {
+      if (verbose) printStats(conn, explore, d)
+
       val nextConn = mergeConnMaps(conn, explore)
+
       if (fullReachExists(nextConn)) d + 1
       else {
-        if (verbose) printStats(conn, explore, d)
         val nextExplore = getNextExplore(conn, explore)
         inner(nextConn, nextExplore, d + 1)
       }
     }
 
     def printStats(conn: ConnMap, explore: ConnMap, d: Int): Unit = {
-      println("---")
       println("depth: %d".format(d))
       printConnMapStats("conn", conn)
       printConnMapStats("explore", explore)
+      println("---")
     }
 
     def printConnMapStats(name: String, map: ConnMap): Unit = {

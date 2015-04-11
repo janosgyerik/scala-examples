@@ -51,15 +51,15 @@ class TeadsTest extends FunSuite {
 //    verifyInput(6, verbose = false)
   }
 
-  def timeAndVerifyInput(index: Int) = {
+  def timeAndVerifyInput(index: Int, verbose: Boolean = false) = {
     val started = System.currentTimeMillis()
-    verifyInput(index)
+    verifyInput(index, verbose)
     val ended = System.currentTimeMillis()
-    println(ended - started)
+    println("input #%d: elapsed millis = %d".format(index, ended - started))
   }
 
   test("verify single input 7") {
-//    verifyInput(7)
+//    timeAndVerifyInput(7, verbose = true)
   }
 
   test("verify single input 8") {
