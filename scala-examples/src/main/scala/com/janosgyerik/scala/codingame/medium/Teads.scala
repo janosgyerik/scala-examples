@@ -82,7 +82,7 @@ object Teads {
     }
 
     def printStats(conn: ConnMap, explore: ConnMap, d: Int): Unit = {
-      println("nodes: %d".format(nodes.size))
+      println("nodes: %d".format(explore.size))
       println("depth: %d".format(d))
       printConnMapStats("conn", conn)
       printConnMapStats("explore", explore)
@@ -96,8 +96,11 @@ object Teads {
     }
 
     def getNextExplore(conn: ConnMap, explore: ConnMap) = {
+      val averageCovered = conn.values.map(_.size).sum / 1.0 / conn.size
+      val averageExplored = explore.values.map(_.size).sum / 1.0 / explore.size
+
       val links = for {
-        n <- nodes
+        n <- nodes if conn.get(n).get.size >= averageCovered && explore.getOrElse(n, Set.empty).size > averageExplored
         x <- explore.get(n).get
         n2 <- neighbors.get(x).get if !conn.get(n).get.contains(n2)
       } yield Link(n, n2)
