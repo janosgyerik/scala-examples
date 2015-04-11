@@ -1,7 +1,7 @@
 package com.janosgyerik.scala.codingame.medium
 
 import java.io.File
-import java.util.Scanner
+import java.util.{Date, Scanner}
 
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
@@ -48,7 +48,14 @@ class TeadsTest extends FunSuite {
   }
 
   test("verify single input 6") {
-//    verifyInput(6, verbose = true)
+//    verifyInput(6, verbose = false)
+  }
+
+  def timeAndVerifyInput(index: Int) = {
+    val started = System.currentTimeMillis()
+    verifyInput(index)
+    val ended = System.currentTimeMillis()
+    println(ended - started)
   }
 
   test("verify single input 7") {
