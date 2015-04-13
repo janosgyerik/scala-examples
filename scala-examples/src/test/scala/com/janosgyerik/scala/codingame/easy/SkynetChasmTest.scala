@@ -74,8 +74,14 @@ class SkynetChasmTest extends FunSuite {
     assert(Dead === state.next(Slow).next(Slow).next(Slow).next(Slow))
   }
 
+  test("Illegal to Wait/Jump/Slow when speed is 0") {
+    intercept[IllegalArgumentException](Running(game, 0).next(Wait))
+    intercept[IllegalArgumentException](Running(game, 0).next(Jump))
+    intercept[IllegalArgumentException](Running(game, 0).next(Slow))
+  }
+
   test("successful action sequence") {
-    //    val sequence = findSuccessfulActionSequence(params)
-    //    assert("" == sequence.toString())
+    val sequence = game.findSuccessfulActionSequence(Running(game, 6))
+    assert("" == sequence.toString())
   }
 }

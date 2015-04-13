@@ -5,8 +5,11 @@ object SkynetChasm {
   abstract class Action
 
   case object Speed extends Action
+
   case object Wait extends Action
+
   case object Slow extends Action
+
   case object Jump extends Action
 
   trait State {
@@ -14,10 +17,14 @@ object SkynetChasm {
   }
 
   case object Dead extends State
+
   case object Landed extends State
 
   case class Running(game: Game, speed: Int, pos: Int = 0) extends State {
     require(posOnRunway(pos) || posOnLanding(pos))
+
+    val onRunway = posOnRunway(pos)
+    val onLanding = posOnLanding(pos)
 
     def posOnRunway(pos: Int) =
       0 <= pos && pos < game.gapStart
@@ -26,6 +33,9 @@ object SkynetChasm {
       game.landingStart <= pos && pos < game.landingEnd
 
     override def next(action: Action): State = {
+      if (speed == 0 && action != Speed) {
+        throw new IllegalArgumentException("Must Speed when speed is 0")
+      }
       val newSpeed = action match {
         case Speed => speed + 1
         case Slow => speed - 1
@@ -50,53 +60,45 @@ object SkynetChasm {
 
   class Game(val initialSpeed: Int, val gapStart: Int, val landingStart: Int, val landingEnd: Int) {
     val initialState: State = Running(this, initialSpeed)
-  }
 
-//  def findSuccessfulActionSequence(params: GameParams): List[Action] = {
-//    def findSuccessfulActionSequence(list: List[Action], state: BikeState): List[Action] = {
-//      if (state.landed) list
-//      else if (!state.alive) List()
-//      else findSuccessfulActionSequenceFromState(list, state)
-//    }
-//
-//    def findSuccessfulActionSequenceFromState(list: List[Action], state: BikeState): List[Action] = {
-//      val possibleActions = getPossibleActions(params, state)
-//      var index = 0
-//      while (index < possibleActions.size) {
-//        val action = possibleActions(index)
-//        val newState = applyAction(params, state, action)
-//        val successfulActionSequence = findSuccessfulActionSequence(action :: list, newState)
-//        if (successfulActionSequence.nonEmpty) return successfulActionSequence.reverse
-//        index = index + 1
-//      }
-//      List()
-//    }
-//
-//    val initialState = getInitialState(params)
-//
-//    findSuccessfulActionSequenceFromState(List(), initialState)
-//  }
-//
-//  def isBeforeGap(params: GameParams, state: BikeState): Boolean =
-//    state.pos < params.gapStart
-//
-//  def isGapImminent(params: GameParams, state: BikeState): Boolean =
-//    state.pos + state.speed >= params.gapStart
-//
-//  def getCommonReasonableActions(state: BikeState): List[Action] = {
-//    List(Speed(), Wait()) ++ { if (state.speed > 1) List(Slow()) else Nil }
-//  }
-//
-//  def getPossibleActions(params: GameParams, state: BikeState): List[Action] = {
-//    if (isBeforeGap(params, state)) {
-//      if (state.speed == 0) List(Speed())
-//      else if (isGapImminent(params, state)) List(Jump())
-//      else getCommonReasonableActions(state)
-//    } else {
-////      List(Slow())
-//      getCommonReasonableActions(state)
-//    }
-//  }
-//
-//  def getInitialState(params: GameParams) = new BikeState(params.initialSpeed)
+    def findSuccessfulActionSequence(start: State = initialState): List[Action] = {
+      def findSolution(state: State, acc: List[Action] = Nil): (Boolean, List[Action]) = {
+        state match {
+          case Dead => (false, Nil)
+          case Landed => (true, acc)
+          case _ =>
+            val possibleActions = getPreferredActions(state.asInstanceOf[Running])
+            var index = 0
+            while (index < possibleActions.size) {
+              val action = possibleActions(index)
+              val newState = state.next(action)
+              val (success, sequence) = findSolution(newState, action :: acc)
+              if (success) return (success, sequence.reverse)
+              index = index + 1
+            }
+            (false, Nil)
+        }
+      }
+      findSolution(start)._2
+    }
+
+    def jumpWouldHelp(state: State) = {
+      val newState = state.next(Jump)
+      newState match {
+        case Dead => false
+        case Landed => true
+        case _ => newState.asInstanceOf[Running].onLanding
+      }
+    }
+
+    def getPreferredActions(state: Running): List[Action] = {
+      if (state.onRunway) {
+        if (state.speed == 0) List(Speed)
+        else if (jumpWouldHelp(state)) List(Jump)
+        else List(Speed, Wait, Slow)
+      } else {
+        List(Slow)
+      }
+    }
+  }
 }
