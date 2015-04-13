@@ -80,8 +80,14 @@ class SkynetChasmTest extends FunSuite {
     intercept[IllegalArgumentException](Running(game, 0).next(Slow))
   }
 
-  test("successful action sequence") {
-    val sequence = game.findSuccessfulActionSequence(Running(game, 6))
-    assert("" == sequence.toString())
+  test("successful action sequences") {
+    assert(15 === game.findSuccessfulActionSequence(Running(game, 0)).size)
+    assert(14 === game.findSuccessfulActionSequence(Running(game, 1)).size)
+    assert(13 === game.findSuccessfulActionSequence(Running(game, 2)).size)
+    assert(13 === game.findSuccessfulActionSequence(Running(game, 10)).size)
+    assert(13 === game.findSuccessfulActionSequence(Running(game, 11)).size)
+    assert(0 === game.findSuccessfulActionSequence(Running(game, 12)).size)
+    assert(0 === game.findSuccessfulActionSequence(Running(game, 13)).size)
+//    assert("" == sequence.toString())
   }
 }

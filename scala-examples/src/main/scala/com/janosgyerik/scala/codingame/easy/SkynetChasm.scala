@@ -66,28 +66,26 @@ object SkynetChasm {
         state match {
           case Dead => (false, Nil)
           case Landed => (true, acc)
-          case _ =>
-            val possibleActions = getPreferredActions(state.asInstanceOf[Running])
+          case x: Running =>
+            val possibleActions = getPreferredActions(x)
             var index = 0
             while (index < possibleActions.size) {
               val action = possibleActions(index)
               val newState = state.next(action)
               val (success, sequence) = findSolution(newState, action :: acc)
-              if (success) return (success, sequence.reverse)
+              if (success) return (success, sequence)
               index = index + 1
             }
             (false, Nil)
         }
       }
-      findSolution(start)._2
+      findSolution(start)._2.reverse
     }
 
     def jumpWouldHelp(state: State) = {
-      val newState = state.next(Jump)
-      newState match {
+      state.next(Jump) match {
         case Dead => false
-        case Landed => true
-        case _ => newState.asInstanceOf[Running].onLanding
+        case x: Running => x.onLanding
       }
     }
 
@@ -96,9 +94,8 @@ object SkynetChasm {
         if (state.speed == 0) List(Speed)
         else if (jumpWouldHelp(state)) List(Jump)
         else List(Speed, Wait, Slow)
-      } else {
-        List(Slow)
       }
+      else List(Slow)
     }
   }
 }
