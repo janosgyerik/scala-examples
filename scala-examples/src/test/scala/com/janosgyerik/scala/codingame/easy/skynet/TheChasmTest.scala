@@ -1,5 +1,6 @@
 package com.janosgyerik.scala.codingame.easy.skynet
 
+import com.janosgyerik.scala.codingame.easy.skynet.TheChasm._
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -86,6 +87,6 @@ class TheChasmTest extends FunSuite {
     assert(13 === game.findSuccessfulActionSequence(Running(game, 11)).size)
     assert(0 === game.findSuccessfulActionSequence(Running(game, 12)).size)
     assert(0 === game.findSuccessfulActionSequence(Running(game, 13)).size)
-//    assert("" == sequence.toString())
+    //    assert("" == sequence.toString())
   }
 }
