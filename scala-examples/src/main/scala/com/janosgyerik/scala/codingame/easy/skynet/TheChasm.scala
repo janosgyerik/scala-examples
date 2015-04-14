@@ -27,13 +27,7 @@ object Runner {
     val game = new TheChasm.Game(initialSpeed, gapStart, landingStart, landingEnd)
     val start = Running(game, initialSpeed)
     for (action <- game.findSuccessfulActionSequence(start)) {
-      val command = action match {
-        case Speed => "SPEED"
-        case Slow => "SLOW"
-        case Wait => "WAIT"
-        case Jump => "JUMP"
-      }
-      println(command)
+      println(action.toString.toUpperCase)
     }
   }
 }
