@@ -98,8 +98,8 @@ object TheChasm {
         state match {
           case Dead => (false, Nil)
           case Landed => (true, acc)
-          case x: Running =>
-            val possibleActions = getPreferredActions(x)
+          case running: Running =>
+            val possibleActions = getPreferredActions(running)
             var index = 0
             while (index < possibleActions.size) {
               val action = possibleActions(index)
@@ -117,7 +117,7 @@ object TheChasm {
     def jumpWouldHelp(state: State) = {
       state.next(Jump) match {
         case Dead => false
-        case x: Running => x.onLanding
+        case running: Running => running.onLanding
       }
     }
 
