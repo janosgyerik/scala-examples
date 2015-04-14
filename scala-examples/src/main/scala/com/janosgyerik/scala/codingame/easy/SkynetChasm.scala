@@ -1,5 +1,36 @@
 package com.janosgyerik.scala.codingame.easy
 
+object Player extends App {
+  import SkynetChasm._
+
+  val r = readInt // the length of the road before the gap.
+  val g = readInt // the length of the gap.
+  val l = readInt // the length of the landing platform.
+
+  val gapStart = r
+  val landingStart = r + g
+  val landingEnd = landingStart + l
+
+  // game loop
+  //while(true) {
+  val s = readInt // the motorbike's speed.
+  val x = readInt // the position on the road of the motorbike.
+
+  val initialSpeed = s
+
+  val game = new SkynetChasm.Game(initialSpeed, gapStart, landingStart, landingEnd)
+  val start = Running(game, initialSpeed)
+  for (action <- game.findSuccessfulActionSequence(start)) {
+    val command = action match {
+      case Speed => "SPEED"
+      case Slow => "SLOW"
+      case Wait => "WAIT"
+      case Jump => "JUMP"
+    }
+    println(command)
+  }
+}
+
 object SkynetChasm {
 
   abstract class Action
