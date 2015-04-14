@@ -1,33 +1,40 @@
 package com.janosgyerik.scala.codingame.easy.skynet
 
+import java.util.Scanner
+
 object Player extends App {
+  Runner.fromScanner(new Scanner(System.in))
+}
+
+object Runner {
   import TheChasm._
 
-  val r = readInt // the length of the road before the gap.
-  val g = readInt // the length of the gap.
-  val l = readInt // the length of the landing platform.
+  def fromScanner(scanner: Scanner): Unit = {
+    val r = scanner.nextInt // the length of the road before the gap.
+    val g = scanner.nextInt // the length of the gap.
+    val l = scanner.nextInt // the length of the landing platform.
 
-  val gapStart = r
-  val landingStart = r + g
-  val landingEnd = landingStart + l
+    val gapStart = r
+    val landingStart = r + g
+    val landingEnd = landingStart + l
 
-  // game loop
-  //while(true) {
-  val s = readInt // the motorbike's speed.
-  val x = readInt // the position on the road of the motorbike.
+    // game loop
+    //while(true) {
+    val s = scanner.nextInt // the motorbike's speed.
 
-  val initialSpeed = s
+    val initialSpeed = s
 
-  val game = new TheChasm.Game(initialSpeed, gapStart, landingStart, landingEnd)
-  val start = Running(game, initialSpeed)
-  for (action <- game.findSuccessfulActionSequence(start)) {
-    val command = action match {
-      case Speed => "SPEED"
-      case Slow => "SLOW"
-      case Wait => "WAIT"
-      case Jump => "JUMP"
+    val game = new TheChasm.Game(initialSpeed, gapStart, landingStart, landingEnd)
+    val start = Running(game, initialSpeed)
+    for (action <- game.findSuccessfulActionSequence(start)) {
+      val command = action match {
+        case Speed => "SPEED"
+        case Slow => "SLOW"
+        case Wait => "WAIT"
+        case Jump => "JUMP"
+      }
+      println(command)
     }
-    println(command)
   }
 }
 
