@@ -1,4 +1,4 @@
-package com.janosgyerik.scala.codingame.easy
+package com.janosgyerik.scala.codingame.easy.skynet
 
 object Player extends App {
   import SkynetChasm._

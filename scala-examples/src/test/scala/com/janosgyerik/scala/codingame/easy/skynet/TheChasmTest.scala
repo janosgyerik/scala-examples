@@ -1,4 +1,4 @@
-package com.janosgyerik.scala.codingame.easy
+package com.janosgyerik.scala.codingame.easy.skynet
 
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
@@ -6,9 +6,7 @@ import org.scalatest.junit.JUnitRunner
 
 
 @RunWith(classOf[JUnitRunner])
-class SkynetChasmTest extends FunSuite {
-
-  import com.janosgyerik.scala.codingame.easy.SkynetChasm._
+class TheChasmTest extends FunSuite {
 
   val gapStart = 30
   val landingStart = 35
