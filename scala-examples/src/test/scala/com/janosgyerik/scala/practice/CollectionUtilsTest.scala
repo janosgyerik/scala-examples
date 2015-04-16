@@ -6,7 +6,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class CollectionUtilsTest extends FunSuite {
-  def except(list: List[Int], index: Int) = {
+  def except[A](list: List[A], index: Int) = {
     list.take(index) ++ list.drop(index + 1)
   }
 
@@ -26,7 +26,7 @@ class CollectionUtilsTest extends FunSuite {
     assert(List(1, 2, 3) == except(List(1, 2, 3), 5))
   }
 
-  def permutations(list: List[Int]): List[List[Int]] = {
+  def permutations[A](list: List[A]): List[List[A]] = {
     if (list.size < 2) List(list)
     else {
       {
@@ -65,5 +65,12 @@ class CollectionUtilsTest extends FunSuite {
 
   test("permutations of 1 .. 8 size = 40320") {
     assert(40320 == permutations((1 to 8).toList).size)
+  }
+
+  test("permutations of 'hi' 'there' 'jack'") {
+    val result = permutations(List("hi", "there", "jack"))
+    assert(6 == result.size)
+    assert(result.contains(List("hi", "there", "jack")))
+    assert(result.contains(List("there", "jack", "hi")))
   }
 }
