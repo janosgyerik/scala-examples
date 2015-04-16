@@ -6,13 +6,33 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class CollectionUtilsTest extends FunSuite {
+  def except(list: List[Int], index: Int) = {
+    list.take(index) ++ list.drop(index + 1)
+  }
+
+  test("1 2 3 except idx=0 is 2 3") {
+    assert(List(2, 3) == except(List(1, 2, 3), 0))
+  }
+
+  test("1 2 3 except idx=1 is 1 3") {
+    assert(List(1, 3) == except(List(1, 2, 3), 1))
+  }
+
+  test("1 2 3 except idx=2 is 1 2") {
+    assert(List(1, 2) == except(List(1, 2, 3), 2))
+  }
+
+  test("1 2 3 except idx=5 is 1 2 3") {
+    assert(List(1, 2, 3) == except(List(1, 2, 3), 5))
+  }
+
   def permutations(list: List[Int]): List[List[Int]] = {
     if (list.size < 2) List(list)
     else {
       {
         for {
           i <- (0 until list.size).toList
-          xs <- permutations(list.take(i) ++ list.drop(i + 1))
+          xs <- permutations(except(list, i))
         } yield list(i) :: xs
       }.distinct
     }
