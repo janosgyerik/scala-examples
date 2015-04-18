@@ -20,7 +20,7 @@ class ScrabbleTest extends FunSuite {
   for (i <- 1 to 1) {
     test("input" + i) {
       assert(Source.fromFile(testdir + "/out" + i + ".txt").mkString.trim
-        == solve(new Scanner(new File(testdir + "/in" + i + ".txt"))).toString)
+        == solve(new Scanner(new File(testdir + "/in" + i + ".txt"))))
     }
   }
 
@@ -73,6 +73,14 @@ class ScrabbleTest extends FunSuite {
 
   test("getPossibleLetterSelections: ale") {
     assert(Vector("e", "l", "le", "a", "ae", "al", "ale") == getPossibleLetterSelections("ale"))
+  }
+
+  test("findPossibleWords in ale, pale, pole, jack using apple") {
+    val words = Set("ale", "pale", "pole", "jack")
+    val letters = "apple"
+
+    val scrabble = new Scrabble(words)
+    assert(Set("ale", "pale") == scrabble.findPossibleWords(letters))
   }
 
 }

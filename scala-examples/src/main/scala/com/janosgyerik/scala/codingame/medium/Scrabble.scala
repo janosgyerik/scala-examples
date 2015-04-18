@@ -17,10 +17,10 @@ object Scrabble {
     (words, letters)
   }
 
-  def solve(scanner: Scanner): Unit = {
+  def solve(scanner: Scanner): String = {
     val (words, letters) = parseInput(scanner)
     val scrabble = new Scrabble(words)
-    println(scrabble.findBestWord(letters))
+    scrabble.findBestWord(letters)
   }
 
   val scoreMap = Map(
@@ -74,9 +74,8 @@ class Scrabble(words: Set[String]) {
   def findPossibleWords(letters: String): Set[String] = {
     val sortedLetters = letters.sorted
 
-    val possibleLetterSelections = getPossibleLetterSelections(sortedLetters)
-
-    Set("which")
+    val letterSelections = getPossibleLetterSelections(sortedLetters).toSet
+    letterSelections.intersect(wordsWithSortedLetters.keySet).map(wordsWithSortedLetters)
   }
 
   def findBestWord(letters: String): String = {
