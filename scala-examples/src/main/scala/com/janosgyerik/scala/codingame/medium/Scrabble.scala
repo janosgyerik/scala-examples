@@ -8,16 +8,41 @@ object Scrabble {
     val wordsCount = scanner.nextInt()
     scanner.nextLine()
 
-    val words = { for (_ <- 1 to wordsCount) yield scanner.nextLine() }.toSet
+    val words = {
+      for (_ <- 1 to wordsCount) yield scanner.nextLine()
+    }.toSet
     val letters = scanner.nextLine()
     (words, letters)
   }
 
-  def findBestWord(words: Set[String], letters: String): Any = ???
-
   def solve(scanner: Scanner): Unit = {
     val (words, letters) = parseInput(scanner)
-    println(findBestWord(words, letters))
+    val scrabble = new Scrabble(words)
+    println(scrabble.findBestWord(letters))
+  }
+
+  val scoreMap = Map(
+    "eaionrtlsu" -> 1,
+    "dg" -> 2,
+    "bcmp" -> 3,
+    "fhvwy" -> 4,
+    "k" -> 5,
+    "jx" -> 8,
+    "qz" -> 10
+  ).flatMap(x => x._1.map(y => y -> x._2))
+
+  def calculateScore(word: String) = ???
+}
+
+class Scrabble(words: Set[String]) {
+
+  def findPossibleWords(letters: String): Set[String] = ???
+
+  def findBestWord(letters: String): String = {
+    val possibleWordsWithScores = for {
+      word <- findPossibleWords(letters)
+    } yield (word, Scrabble.calculateScore(word))
+    ""
   }
 
 }

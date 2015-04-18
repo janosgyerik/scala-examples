@@ -31,4 +31,13 @@ class ScrabbleTest extends FunSuite {
     assert(Set("because", "first", "these", "could", "which") == words)
   }
 
+  test("scoreMap") {
+    val scoreMap = Scrabble.scoreMap
+    assert(1 == scoreMap('a'))
+    assert(3 == scoreMap('b'))
+    assert(8 == scoreMap('x'))
+    assert(8 == scoreMap('j'))
+    assert(10 == scoreMap('q'))
+  }
+
 }
