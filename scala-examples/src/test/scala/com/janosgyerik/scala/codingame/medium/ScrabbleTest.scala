@@ -63,4 +63,12 @@ class ScrabbleTest extends FunSuite {
     assert("mike" == getWordWithBestScore(Set("apple", "mike")))
   }
 
+  test("selectLettersUsingBitmask apple 14") {
+    assert("ppl" == selectLettersUsingBitmask("apple", 14))
+  }
+
+  test("selectLettersUsingBitmask apple 19") {
+    assert("ale" == selectLettersUsingBitmask("apple", 19))
+  }
+
 }

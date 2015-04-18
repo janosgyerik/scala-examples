@@ -2,6 +2,8 @@ package com.janosgyerik.scala.codingame.medium
 
 import java.util.Scanner
 
+import scala.annotation.tailrec
+
 object Scrabble {
 
   def parseInput(scanner: Scanner) = {
@@ -41,6 +43,26 @@ object Scrabble {
     wordsWithScores.maxBy { case (word, score) => score }._1
   }
 
+  def selectLettersUsingBitmask(letters: String, bitmask: Int) = {
+    @tailrec
+    def selectLettersUsingBitmask(remainingLetters: String, remainingBitmask: Int, acc: String): String = {
+      if (remainingLetters.isEmpty || remainingBitmask == 0) acc
+      else {
+        val newChar = if ((remainingBitmask & 1) == 1) remainingLetters.last else ""
+        selectLettersUsingBitmask(remainingLetters.init, remainingBitmask >> 1, newChar + acc)
+      }
+    }
+    selectLettersUsingBitmask(letters, bitmask, "")
+  }
+
+  def getPossibleLetterSelections(letters: String) = {
+    assert(letters.length <= 7)
+    assert(letters.length > 0)
+    for {
+      bitmask <- 1 to math.pow(2, letters.length).asInstanceOf[Int]
+    } yield selectLettersUsingBitmask(letters, bitmask)
+  }
+
 }
 
 class Scrabble(words: Set[String]) {
@@ -50,6 +72,10 @@ class Scrabble(words: Set[String]) {
   val wordsWithSortedLetters = words.map(word => word.sorted -> word).toMap
 
   def findPossibleWords(letters: String): Set[String] = {
+    val sortedLetters = letters.sorted
+
+    val possibleLetterSelections = getPossibleLetterSelections(sortedLetters)
+
     Set("which")
   }
 
