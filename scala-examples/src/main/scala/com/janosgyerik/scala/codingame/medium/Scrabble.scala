@@ -32,17 +32,26 @@ object Scrabble {
   ).flatMap(x => x._1.map(y => y -> x._2))
 
   def calculateScore(word: String) = word.map(scoreMap).sum
+
+  def getWordWithBestScore(words: Set[String]) = {
+    val wordsWithScores = for {
+      word <- words
+    } yield (word, calculateScore(word))
+
+    wordsWithScores.maxBy { case (word, score) => score }._1
+  }
+
 }
 
 class Scrabble(words: Set[String]) {
 
-  def findPossibleWords(letters: String): Set[String] = ???
+  import Scrabble._
 
-  def findBestWord(letters: String): String = {
-    val possibleWordsWithScores = for {
-      word <- findPossibleWords(letters)
-    } yield (word, Scrabble.calculateScore(word))
-    ""
+  def findPossibleWords(letters: String): Set[String] = {
+    Set("which")
   }
 
+  def findBestWord(letters: String): String = {
+    getWordWithBestScore(findPossibleWords(letters))
+  }
 }

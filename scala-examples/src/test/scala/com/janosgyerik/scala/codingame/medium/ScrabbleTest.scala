@@ -55,4 +55,9 @@ class ScrabbleTest extends FunSuite {
     assert(10 == calculateScore("mike"))
   }
 
+  test("getWordWithBestScore in apple, jack, mike is jack") {
+    assert("jack" == getWordWithBestScore(Set("apple", "jack", "mike")))
+    assert("mike" == getWordWithBestScore(Set("apple", "mike")))
+  }
+
 }
