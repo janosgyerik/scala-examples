@@ -31,7 +31,7 @@ object Scrabble {
     "qz" -> 10
   ).flatMap(x => x._1.map(y => y -> x._2))
 
-  def calculateScore(word: String) = ???
+  def calculateScore(word: String) = word.map(scoreMap).sum
 }
 
 class Scrabble(words: Set[String]) {
