@@ -24,4 +24,11 @@ class ScrabbleTest extends FunSuite {
     }
   }
 
+  test("parseInput example 1") {
+    val input = "5\nbecause\nfirst\nthese\ncould\nwhich\nhicquwh"
+    val (words, letters) = parseInput(new Scanner(input))
+    assert("hicquwh" == letters)
+    assert(Set("because", "first", "these", "could", "which") == words)
+  }
+
 }
