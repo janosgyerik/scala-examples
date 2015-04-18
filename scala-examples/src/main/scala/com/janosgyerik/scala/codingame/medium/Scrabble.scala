@@ -47,6 +47,8 @@ class Scrabble(words: Set[String]) {
 
   import Scrabble._
 
+  val wordsWithSortedLetters = words.map(word => word.sorted -> word).toMap
+
   def findPossibleWords(letters: String): Set[String] = {
     Set("which")
   }

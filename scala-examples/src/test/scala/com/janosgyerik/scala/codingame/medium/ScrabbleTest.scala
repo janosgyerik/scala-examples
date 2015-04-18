@@ -29,6 +29,9 @@ class ScrabbleTest extends FunSuite {
     val (words, letters) = parseInput(new Scanner(input))
     assert("hicquwh" == letters)
     assert(Set("because", "first", "these", "could", "which") == words)
+
+    val scrabble = new Scrabble(words)
+    assert("which" == scrabble.wordsWithSortedLetters("chhiw"))
   }
 
   test("scoreMap") {
