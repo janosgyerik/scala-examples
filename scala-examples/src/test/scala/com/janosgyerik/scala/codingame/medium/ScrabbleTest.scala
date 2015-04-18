@@ -71,4 +71,8 @@ class ScrabbleTest extends FunSuite {
     assert("ale" == selectLettersUsingBitmask("apple", 19))
   }
 
+  test("getPossibleLetterSelections: ale") {
+    assert(Vector("e", "l", "le", "a", "ae", "al", "ale") == getPossibleLetterSelections("ale"))
+  }
+
 }

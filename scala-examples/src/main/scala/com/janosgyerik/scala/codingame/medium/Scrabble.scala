@@ -59,7 +59,7 @@ object Scrabble {
     assert(letters.length <= 7)
     assert(letters.length > 0)
     for {
-      bitmask <- 1 to math.pow(2, letters.length).asInstanceOf[Int]
+      bitmask <- 1 to math.pow(2, letters.length).asInstanceOf[Int] - 1
     } yield selectLettersUsingBitmask(letters, bitmask)
   }
 
