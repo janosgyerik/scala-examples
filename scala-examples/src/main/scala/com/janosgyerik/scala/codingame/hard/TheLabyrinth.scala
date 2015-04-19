@@ -104,10 +104,9 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
     def findShortestPath(visited: Set[Pos], branches: List[Branch]): List[Action] = {
       val newBranches = for {
         branch <- branches
-        action <- allActions if {
+        action <- allActions
         pos = branch._1 + action
-        !visited.contains(pos) && isValidPos(pos)
-      }
+        if !visited.contains(pos) && isValidPos(pos)
       } yield (pos, action :: branch._2)
 
       if (newBranches.isEmpty) {
