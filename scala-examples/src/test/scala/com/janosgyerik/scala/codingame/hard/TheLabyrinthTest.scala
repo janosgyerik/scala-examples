@@ -141,4 +141,12 @@ class TheLabyrinthTest extends FunSuite {
     assert(List(Down, Down, Right, Right, Right, Right, Up, Up, Left) == game.findShortestPath(game.pos, 'C'))
   }
 
+  test("findShortestPath: unreachable") {
+    val game = new TheLabyrinth(Array(
+      ".T..#C."
+    ), 10)
+    assert(game.isTargetVisible)
+    assert(List.empty == game.findShortestPath(game.pos, 'C'))
+  }
+
 }

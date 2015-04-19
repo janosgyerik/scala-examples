@@ -103,10 +103,14 @@ class TheLabyrinth(initialMaze: Maze, timeToAlarm: Int) {
       val newBranches = for {
         branch <- branches
         action <- allActions if {
-        pos = branch._1 + action
-        !visited.contains(pos) && isValidPos(pos)
-      }
+          pos = branch._1 + action
+          !visited.contains(pos) && isValidPos(pos)
+        }
       } yield (pos, action :: branch._2)
+
+      if (newBranches.isEmpty) {
+        return List.empty
+      }
 
       var index = 0
       while (index < newBranches.size) {
