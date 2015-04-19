@@ -55,12 +55,14 @@ object TheLabyrinth {
 
 }
 
-class TheLabyrinth(initialMaze: Maze, timeToAlarm: Int) {
+class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
 
   var maze = initialMaze
   val start = findPos(startMarker)
   var pos = start
   var target = findPos(targetMarker)
+
+  val timeToAlarm = if (alarm > 0) alarm else maze.length * maze(0).length
 
   // used while exploring, to avoid cyclical logic
   // (keep going until waypoint reached before recalculating shortest paths)
@@ -103,9 +105,9 @@ class TheLabyrinth(initialMaze: Maze, timeToAlarm: Int) {
       val newBranches = for {
         branch <- branches
         action <- allActions if {
-          pos = branch._1 + action
-          !visited.contains(pos) && isValidPos(pos)
-        }
+        pos = branch._1 + action
+        !visited.contains(pos) && isValidPos(pos)
+      }
       } yield (pos, action :: branch._2)
 
       if (newBranches.isEmpty) {

@@ -9,22 +9,22 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class TheLabyrinthTest extends FunSuite {
   test("maze.start: unreachable in empty maze") {
-    val game = new TheLabyrinth(Array(""), 10)
+    val game = new TheLabyrinth(Array(""))
     assert(Unreachable == game.start)
   }
 
   test("maze.start: 0,0") {
-    val game = new TheLabyrinth(Array("" + startMarker), 10)
+    val game = new TheLabyrinth(Array("" + startMarker))
     assert(new Pos(0,0) == game.start)
   }
 
   test("maze.start: 1,2") {
-    val game = new TheLabyrinth(Array("...", "..T", "..."), 10)
+    val game = new TheLabyrinth(Array("...", "..T", "..."))
     assert(new Pos(1,2) == game.start)
   }
 
   test("countScanAfterAction: nothing when map is complete") {
-    val game = new TheLabyrinth(Array("...", "..T", "..."), 10)
+    val game = new TheLabyrinth(Array("...", "..T", "..."))
     for {
       action <- allActions
     } yield {
@@ -40,7 +40,7 @@ class TheLabyrinthTest extends FunSuite {
       "?..T..?",
       "?.....?",
       "?.....?",
-      "???????"), 10)
+      "???????"))
     allActions.foreach(action => assert(5 == game.countScanAfterAction(action)))
   }
 
@@ -52,7 +52,7 @@ class TheLabyrinthTest extends FunSuite {
       "...T..?",
       "......?",
       "......?",
-      "????..?"), 10)
+      "????..?"))
     assert(3 == game.countScanAfterAction(Up))
     assert(4 == game.countScanAfterAction(Right))
     assert(3 == game.countScanAfterAction(Down))
@@ -65,7 +65,7 @@ class TheLabyrinthTest extends FunSuite {
     val game = new TheLabyrinth(Array(
       "...",
       ".T.",
-      "..."), 10)
+      "..."))
     assert(allActions == game.getValidActions)
   }
 
@@ -73,7 +73,7 @@ class TheLabyrinthTest extends FunSuite {
     val game = new TheLabyrinth(Array(
       "T..",
       "...",
-      "..."), 10)
+      "..."))
     assert(Set(Right, Down) == game.getValidActions)
   }
 
@@ -81,7 +81,7 @@ class TheLabyrinthTest extends FunSuite {
     val game = new TheLabyrinth(Array(
       "...",
       "...",
-      ".T."), 10)
+      ".T."))
     assert(Set(Up, Right, Left) == game.getValidActions)
   }
 
@@ -89,14 +89,14 @@ class TheLabyrinthTest extends FunSuite {
     val game = new TheLabyrinth(Array(
       ".#.",
       "#T.",
-      "..."), 10)
+      "..."))
     assert(Set(Right, Down) == game.getValidActions)
   }
 
   test("getValidActions: none") {
     val game = new TheLabyrinth(Array(
       ".#.",
-      "#T#"), 10)
+      "#T#"))
     assert(Set() == game.getValidActions)
   }
 
@@ -105,7 +105,7 @@ class TheLabyrinthTest extends FunSuite {
       "......",
       ".T..C.",
       "......"
-    ), 10)
+    ))
     assert(game.isTargetVisible)
     assert(List(Right, Right, Right) == game.findShortestPath(game.pos, 'C'))
   }
@@ -115,7 +115,7 @@ class TheLabyrinthTest extends FunSuite {
       "......",
       ".T....",
       "....C."
-    ), 10)
+    ))
     assert(game.isTargetVisible)
     assert(List(Down, Right, Right, Right) == game.findShortestPath(game.pos, 'C'))
   }
@@ -125,7 +125,7 @@ class TheLabyrinthTest extends FunSuite {
       "......",
       ".T.#C.",
       "......"
-    ), 10)
+    ))
     assert(game.isTargetVisible)
     assert(List(Up, Right, Right, Right, Down) == game.findShortestPath(game.pos, 'C'))
   }
@@ -136,15 +136,13 @@ class TheLabyrinthTest extends FunSuite {
       ".T.#C.",
       "...##.",
       "......"
-    ), 10)
+    ))
     assert(game.isTargetVisible)
     assert(List(Down, Down, Right, Right, Right, Right, Up, Up, Left) == game.findShortestPath(game.pos, 'C'))
   }
 
   test("findShortestPath: unreachable") {
-    val game = new TheLabyrinth(Array(
-      ".T..#C."
-    ), 10)
+    val game = new TheLabyrinth(Array(".T..#C."))
     assert(game.isTargetVisible)
     assert(List.empty == game.findShortestPath(game.pos, 'C'))
   }
