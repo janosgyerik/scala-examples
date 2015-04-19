@@ -21,7 +21,18 @@ object TheLabyrinth {
 
   val allActions = Set(Up, Down, Left, Right)
 
-  type Maze = Array[String]
+  class Maze(rows: Array[String]) {
+    require(rows.length > 0)
+
+    val height = rows.length
+    val width = rows(0).length
+
+    def apply(row: Int) = rows(row)
+  }
+
+  object Maze {
+    def fromLines(rows: String*) = new Maze(rows.toArray)
+  }
 
   class Pos(val row: Int, val col: Int) {
     def +(action: Action) = {
@@ -62,7 +73,7 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
   var pos = start
   var target = findPos(targetMarker)
 
-  val timeToAlarm = if (alarm > 0) alarm else maze.length * maze(0).length
+  val timeToAlarm = if (alarm > 0) alarm else Integer.MAX_VALUE
 
   // used while exploring, to avoid cyclical logic
   // (keep going until waypoint reached before recalculating shortest paths)
@@ -81,7 +92,7 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
 
   @tailrec
   private def findPos(c: Char, row: Int): Pos = {
-    if (row >= maze.size) Unreachable
+    if (row >= maze.height) Unreachable
     else
       maze(row) indexOf c match {
         case -1 => findPos(c, row + 1)
@@ -130,8 +141,8 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
 
   def isValidPos(pos: Pos) = {
     def withinRange(x: Int, end: Int) = 0 <= x && x < end
-    withinRange(pos.row, maze.size) &&
-      withinRange(pos.col, maze(0).length) &&
+    withinRange(pos.row, maze.height) &&
+      withinRange(pos.col, maze.width) &&
       maze(pos.row)(pos.col) != wallMarker
   }
 
@@ -147,9 +158,9 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
     val posAfterAction = pos + action
 
     val startRow = math.max(0, posAfterAction.row - scanRange)
-    val endRow = math.min(maze.size - 1, posAfterAction.row + scanRange)
+    val endRow = math.min(maze.height - 1, posAfterAction.row + scanRange)
     val startCol = math.max(0, posAfterAction.col - scanRange)
-    val endCol = math.min(maze(0).length - 1, posAfterAction.col + scanRange)
+    val endCol = math.min(maze.width - 1, posAfterAction.col + scanRange)
 
     {
       for {
