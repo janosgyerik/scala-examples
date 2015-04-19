@@ -53,12 +53,12 @@ object TheLabyrinth {
 
 }
 
-class TheLabyrinth(initialMaze: Maze, initialPos: Pos, timeToAlarm: Int) {
+class TheLabyrinth(initialMaze: Maze, timeToAlarm: Int) {
 
   var maze = initialMaze
-  var pos = initialPos
-  var target = findPos(targetMarker)
   val start = findPos(startMarker)
+  var pos = start
+  var target = findPos(targetMarker)
 
   def updateMaze(maze: Maze): Unit = {
     this.maze = maze

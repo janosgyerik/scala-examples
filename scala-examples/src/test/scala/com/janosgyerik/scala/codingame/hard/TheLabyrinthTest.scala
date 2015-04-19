@@ -9,22 +9,22 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class TheLabyrinthTest extends FunSuite {
   test("maze.start: unreachable in empty maze") {
-    val game = new TheLabyrinth(Array(""), Unreachable, 10)
+    val game = new TheLabyrinth(Array(""), 10)
     assert(Unreachable == game.start)
   }
 
   test("maze.start: 0,0") {
-    val game = new TheLabyrinth(Array("" + startMarker), Unreachable, 10)
+    val game = new TheLabyrinth(Array("" + startMarker), 10)
     assert(new Pos(0,0) == game.start)
   }
 
   test("maze.start: 1,2") {
-    val game = new TheLabyrinth(Array("...", "..T", "..."), Unreachable, 10)
+    val game = new TheLabyrinth(Array("...", "..T", "..."), 10)
     assert(new Pos(1,2) == game.start)
   }
 
   test("countScanAfterAction: nothing when map is complete") {
-    val game = new TheLabyrinth(Array("...", "..T", "..."), Unreachable, 10)
+    val game = new TheLabyrinth(Array("...", "..T", "..."), 10)
     for {
       action <- allActions
     } yield {
@@ -40,7 +40,7 @@ class TheLabyrinthTest extends FunSuite {
       "?..T..?",
       "?.....?",
       "?.....?",
-      "???????"), new Pos(3, 3), 10)
+      "???????"), 10)
     allActions.foreach(action => assert(5 == game.countScanAfterAction(action)))
   }
 
@@ -52,7 +52,7 @@ class TheLabyrinthTest extends FunSuite {
       "...T..?",
       "......?",
       "......?",
-      "????..?"), new Pos(3, 3), 10)
+      "????..?"), 10)
     assert(3 == game.countScanAfterAction(Up))
     assert(4 == game.countScanAfterAction(Right))
     assert(3 == game.countScanAfterAction(Down))
@@ -65,7 +65,7 @@ class TheLabyrinthTest extends FunSuite {
     val game = new TheLabyrinth(Array(
       "...",
       ".T.",
-      "..."), new Pos(1, 1), 10)
+      "..."), 10)
     assert(allActions == game.getValidActions)
   }
 
@@ -73,7 +73,7 @@ class TheLabyrinthTest extends FunSuite {
     val game = new TheLabyrinth(Array(
       "T..",
       "...",
-      "..."), new Pos(0, 0), 10)
+      "..."), 10)
     assert(Set(Right, Down) == game.getValidActions)
   }
 
@@ -81,7 +81,7 @@ class TheLabyrinthTest extends FunSuite {
     val game = new TheLabyrinth(Array(
       "...",
       "...",
-      ".T."), new Pos(2, 1), 10)
+      ".T."), 10)
     assert(Set(Up, Right, Left) == game.getValidActions)
   }
 
@@ -89,14 +89,14 @@ class TheLabyrinthTest extends FunSuite {
     val game = new TheLabyrinth(Array(
       ".#.",
       "#T.",
-      "..."), new Pos(1, 1), 10)
+      "..."), 10)
     assert(Set(Right, Down) == game.getValidActions)
   }
 
   test("getValidActions: none") {
     val game = new TheLabyrinth(Array(
       ".#.",
-      "#T#"), new Pos(1, 1), 10)
+      "#T#"), 10)
     assert(Set() == game.getValidActions)
   }
 
