@@ -61,4 +61,43 @@ class TheLabyrinthTest extends FunSuite {
     assert(Right == game.findActionToMaxScan._1)
   }
 
+  test("getValidActions: all") {
+    val game = new TheLabyrinth(Array(
+      "...",
+      ".T.",
+      "..."), new Pos(1, 1), 10)
+    assert(allActions == game.getValidActions)
+  }
+
+  test("getValidActions: top left corner") {
+    val game = new TheLabyrinth(Array(
+      "T..",
+      "...",
+      "..."), new Pos(0, 0), 10)
+    assert(Set(Right, Down) == game.getValidActions)
+  }
+
+  test("getValidActions: bottom edge") {
+    val game = new TheLabyrinth(Array(
+      "...",
+      "...",
+      ".T."), new Pos(2, 1), 10)
+    assert(Set(Up, Right, Left) == game.getValidActions)
+  }
+
+  test("getValidActions: wall to left and up") {
+    val game = new TheLabyrinth(Array(
+      ".#.",
+      "#T.",
+      "..."), new Pos(1, 1), 10)
+    assert(Set(Right, Down) == game.getValidActions)
+  }
+
+  test("getValidActions: none") {
+    val game = new TheLabyrinth(Array(
+      ".#.",
+      "#T#"), new Pos(1, 1), 10)
+    assert(Set() == game.getValidActions)
+  }
+
 }

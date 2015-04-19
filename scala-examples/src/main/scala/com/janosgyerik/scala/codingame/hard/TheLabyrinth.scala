@@ -19,7 +19,7 @@ object TheLabyrinth {
 
   case object Right extends Action(0, 1)
 
-  val allActions = List(Up, Down, Left, Right)
+  val allActions = Set(Up, Down, Left, Right)
 
   type Maze = Array[String]
 
@@ -46,6 +46,7 @@ object TheLabyrinth {
 
   case object Unreachable extends Pos(-1, -1)
 
+  val wallMarker = '#'
   val startMarker = 'T'
   val targetMarker = 'C'
   val unknownMarker = '?'
@@ -95,7 +96,9 @@ class TheLabyrinth(initialMaze: Maze, initialPos: Pos, timeToAlarm: Int) {
 
   def isValidPos(pos: Pos) = {
     def withinRange(x: Int, end: Int) = 0 <= x && x < end
-    withinRange(pos.row, maze.size) && withinRange(pos.col, maze(0).length)
+    withinRange(pos.row, maze.size) &&
+      withinRange(pos.col, maze(0).length) &&
+      maze(pos.row)(pos.col) != wallMarker
   }
 
   def isValidAction(action: Action) = isValidPos(pos + action)
