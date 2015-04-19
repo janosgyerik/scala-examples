@@ -101,7 +101,7 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
   def findShortestPath(from: Pos, marker: Marker): List[Action] = {
     type Branch = (Pos, List[Action])
 
-    def findShortedPath(visited: Set[Pos], branches: List[Branch]): List[Action] = {
+    def findShortestPath(visited: Set[Pos], branches: List[Branch]): List[Action] = {
       val newBranches = for {
         branch <- branches
         action <- allActions if {
@@ -123,9 +123,9 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
       }
 
       val newPos = newBranches.map { case (x, _) => x }.toSet
-      findShortedPath(visited ++ newPos, newBranches)
+      findShortestPath(visited ++ newPos, newBranches)
     }
-    findShortedPath(Set.empty, List((from, List.empty)))
+    findShortestPath(Set.empty, List((from, List.empty)))
   }
 
   def isValidPos(pos: Pos) = {
