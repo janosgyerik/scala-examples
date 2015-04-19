@@ -52,7 +52,7 @@ class TheLabyrinth(initialMaze: Maze, initialPos: Pos) {
   def isTargetVisible = target != Unreachable
 
   def isTargetReachable =
-    !findShortestPath(start, target).isEmpty
+    findShortestPath(start, target).nonEmpty
 
   def updateMaze(maze: Maze): Unit = {
     this.maze = maze
