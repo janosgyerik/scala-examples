@@ -28,6 +28,13 @@ object TheLabyrinth {
     val width = rows(0).length
 
     def apply(row: Int) = rows(row)
+
+    def isValidPos(pos: Pos) = {
+      def withinRange(x: Int, end: Int) = 0 <= x && x < end
+      withinRange(pos.row, height) &&
+        withinRange(pos.col, width) &&
+        rows(pos.row)(pos.col) != wallMarker
+    }
   }
 
   object Maze {
@@ -118,7 +125,7 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
         branch <- branches
         action <- allActions
         pos = branch._1 + action
-        if !visited.contains(pos) && isValidPos(pos)
+        if !visited.contains(pos) && maze.isValidPos(pos)
       } yield (pos, action :: branch._2)
 
       if (newBranches.isEmpty) {
@@ -139,14 +146,7 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
     findShortestPath(Set.empty, List((from, List.empty)))
   }
 
-  def isValidPos(pos: Pos) = {
-    def withinRange(x: Int, end: Int) = 0 <= x && x < end
-    withinRange(pos.row, maze.height) &&
-      withinRange(pos.col, maze.width) &&
-      maze(pos.row)(pos.col) != wallMarker
-  }
-
-  def isValidAction(action: Action) = isValidPos(pos + action)
+  def isValidAction(action: Action) = maze.isValidPos(pos + action)
 
   def getValidActions = {
     allActions.filter(isValidAction)
