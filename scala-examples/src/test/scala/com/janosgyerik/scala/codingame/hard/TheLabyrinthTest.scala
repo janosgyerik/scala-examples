@@ -44,7 +44,7 @@ class TheLabyrinthTest extends FunSuite {
     allActions.foreach(action => assert(5 == game.countScanAfterAction(action)))
   }
 
-  test("countScanAfterAction: differnt for all directions") {
+  test("countScanAfterAction: different for all directions") {
     val game = new TheLabyrinth(Array(
       "????..?",
       "?......",
@@ -57,6 +57,8 @@ class TheLabyrinthTest extends FunSuite {
     assert(4 == game.countScanAfterAction(Right))
     assert(3 == game.countScanAfterAction(Down))
     assert(2 == game.countScanAfterAction(Left))
+
+    assert(Right == game.findActionToMaxScan._1)
   }
 
 }
