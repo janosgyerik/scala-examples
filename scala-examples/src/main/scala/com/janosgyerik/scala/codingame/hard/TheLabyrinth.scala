@@ -31,8 +31,22 @@ object TheLabyrinth {
 }
 
 class TheLabyrinth(initialMaze: Maze, initialPos: Pos) {
+
   var maze = initialMaze
   var pos = initialPos
+  var target = findPos(targetMarker)
+  val start = findPos(startMarker)
+
+  def updateMaze(maze: Maze): Unit = {
+    this.maze = maze
+    if (target == Unreachable) {
+      target = findPos(targetMarker)
+    }
+  }
+
+  def updatePos(pos: Pos): Unit = {
+    this.pos = pos
+  }
 
   @tailrec
   private def findPos(c: Char, row: Int): Pos = {
@@ -46,24 +60,10 @@ class TheLabyrinth(initialMaze: Maze, initialPos: Pos) {
 
   def findPos(c: Char): Pos = findPos(c, 0)
 
-  val start = findPos(startMarker)
-  var target = findPos(targetMarker)
-
   def isTargetVisible = target != Unreachable
 
   def isTargetReachable =
     findShortestPath(start, target).nonEmpty
-
-  def updateMaze(maze: Maze): Unit = {
-    this.maze = maze
-    if (target == Unreachable) {
-      target = findPos(targetMarker)
-    }
-  }
-
-  def updatePos(pos: Pos): Unit = {
-    this.pos = pos
-  }
 
   def findShortestPath(from: Pos, to: Pos): List[Action] = {
     to match {
