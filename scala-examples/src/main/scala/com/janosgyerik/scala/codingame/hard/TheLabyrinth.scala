@@ -115,9 +115,7 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
       }
 
       val matchingPaths = for {
-        branch <- newBranches
-        pos = branch._1
-        path = branch._2
+        (pos, path) <- newBranches
         if maze(pos.row)(pos.col) == marker
       } yield path.reverse
 
