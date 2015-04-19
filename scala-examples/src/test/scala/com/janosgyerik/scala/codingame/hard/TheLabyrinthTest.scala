@@ -14,7 +14,7 @@ class TheLabyrinthTest extends FunSuite {
   }
 
   test("maze.start: 0,0") {
-    val game = new TheLabyrinth(Maze.fromLines("" + startMarker))
+    val game = new TheLabyrinth(Maze.fromLines("" + Maze.startMarker))
     assert(new Pos(0,0) == game.start)
   }
 

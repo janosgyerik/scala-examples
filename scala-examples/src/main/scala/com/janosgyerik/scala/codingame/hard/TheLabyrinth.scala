@@ -24,8 +24,25 @@ object TheLabyrinth {
   class Maze(rows: Array[String]) {
     require(rows.length > 0)
 
+    import Maze._
+
     val height = rows.length
     val width = rows(0).length
+
+    val start = findPos(startMarker)
+    val target = findPos(targetMarker)
+
+    @tailrec
+    private def findPos(c: Char, row: Int): Pos = {
+      if (row >= height) Unreachable
+      else
+        rows(row) indexOf c match {
+          case -1 => findPos(c, row + 1)
+          case col => new Pos(row, col)
+        }
+    }
+
+    def findPos(c: Char): Pos = findPos(c, 0)
 
     def apply(row: Int) = rows(row)
 
@@ -39,9 +56,16 @@ object TheLabyrinth {
         withinRange(pos.col, width) &&
         rows(pos.row)(pos.col) != wallMarker
     }
+
+    def isUnknownPos(row: Int, col: Int) = this(row, col) == unknownMarker
   }
 
   object Maze {
+    val wallMarker = '#'
+    val startMarker = 'T'
+    val targetMarker = 'C'
+    val unknownMarker = '?'
+
     def fromLines(rows: String*) = new Maze(rows.toArray)
   }
 
@@ -70,19 +94,14 @@ object TheLabyrinth {
 
   type Marker = Char
 
-  val wallMarker = '#'
-  val startMarker = 'T'
-  val targetMarker = 'C'
-  val unknownMarker = '?'
-
 }
 
 class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
 
   var maze = initialMaze
-  val start = findPos(startMarker)
+  val start = maze.start
   var pos = start
-  var target = findPos(targetMarker)
+  var target = maze.target
 
   val timeToAlarm = if (alarm > 0) alarm else Integer.MAX_VALUE
 
@@ -93,25 +112,13 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
   def updateMaze(maze: Maze): Unit = {
     this.maze = maze
     if (target == Unreachable) {
-      target = findPos(targetMarker)
+      target = maze.target
     }
   }
 
   def updatePos(pos: Pos): Unit = {
     this.pos = pos
   }
-
-  @tailrec
-  private def findPos(c: Char, row: Int): Pos = {
-    if (row >= maze.height) Unreachable
-    else
-      maze(row) indexOf c match {
-        case -1 => findPos(c, row + 1)
-        case col => new Pos(row, col)
-      }
-  }
-
-  def findPos(c: Char): Pos = findPos(c, 0)
 
   def isTargetVisible = target != Unreachable
 
@@ -167,7 +174,7 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
     {
       for {
         row <- startRow to endRow
-        col <- startCol to endCol if maze(row, col) == unknownMarker
+        col <- startCol to endCol if maze.isUnknownPos(row, col)
       } yield true
     }.size
   }
@@ -187,8 +194,8 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
   def updateWaypointAndExplore() = {
     val newWaypoint =
       if (waypoint.nonEmpty) waypoint
-      else if (isTooFarFromStart) findShortestPath(start, unknownMarker)
-      else findShortestPath(pos, unknownMarker)
+      else if (isTooFarFromStart) findShortestPath(start, Maze.unknownMarker)
+      else findShortestPath(pos, Maze.unknownMarker)
 
     waypoint = newWaypoint.tail
     newWaypoint.head
