@@ -100,4 +100,5 @@ class TheLabyrinthTest extends FunSuite {
     assert(Set() == game.getValidActions)
   }
 
+
 }

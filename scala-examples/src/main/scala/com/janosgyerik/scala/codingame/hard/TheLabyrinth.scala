@@ -46,6 +46,8 @@ object TheLabyrinth {
 
   case object Unreachable extends Pos(-1, -1)
 
+  type Marker = Char
+
   val wallMarker = '#'
   val startMarker = 'T'
   val targetMarker = 'C'
@@ -59,6 +61,10 @@ class TheLabyrinth(initialMaze: Maze, timeToAlarm: Int) {
   val start = findPos(startMarker)
   var pos = start
   var target = findPos(targetMarker)
+
+  // used while exploring, to avoid cyclical logic
+  // (keep going until waypoint reached before recalculating shortest paths)
+  var waypoint = List[Action]()
 
   def updateMaze(maze: Maze): Unit = {
     this.maze = maze
@@ -88,11 +94,9 @@ class TheLabyrinth(initialMaze: Maze, timeToAlarm: Int) {
   def isTargetReachable =
     findShortestPath(start, target).nonEmpty
 
-  def findShortestPath(from: Pos, to: Pos): List[Action] = {
-    to match {
-      case Unreachable => List()
-    }
-  }
+  def findShortestPath(from: Pos, to: Pos): List[Action] = ???
+
+  def findShortestPath(from: Pos, to: Marker): List[Action] = ???
 
   def isValidPos(pos: Pos) = {
     def withinRange(x: Int, end: Int) = 0 <= x && x < end
@@ -133,17 +137,24 @@ class TheLabyrinth(initialMaze: Maze, timeToAlarm: Int) {
     actionScanPairs.maxBy(_._2)
   }
 
+  def getNextMoveToTarget = findShortestPath(pos, target).head
+
+  def isTooFarFromStart = findShortestPath(start, pos).size >= timeToAlarm - scanRange
+
+  def updateWaypointAndExplore() = {
+    val newWaypoint =
+      if (waypoint.nonEmpty) waypoint
+      else if (isTooFarFromStart) findShortestPath(start, unknownMarker)
+      else findShortestPath(pos, unknownMarker)
+
+    waypoint = newWaypoint.tail
+    newWaypoint.head
+  }
+
   def getNextMove = {
-    if (isTargetVisible && isTargetReachable) {
-      findShortestPath(pos, target).head
-    } else {
-      val pathToStart = findShortestPath(pos, start)
-      if (pathToStart.size < timeToAlarm) {
-        val (action, maxScan) = findActionToMaxScan
-        if (maxScan > 0) action
-        else pathToStart.head
-      }
-      else pathToStart.head
-    }
+    // TODO:
+    //if (hasAlreadyReachedTarget) getNextMoveToStart
+    if (isTargetVisible && isTargetReachable) getNextMoveToTarget
+    else updateWaypointAndExplore()
   }
 }
