@@ -29,6 +29,10 @@ object TheLabyrinth {
 
     def apply(row: Int) = rows(row)
 
+    def apply(row: Int, col: Int) = rows(row)(col)
+
+    def apply(pos: Pos) = rows(pos.row)(pos.col)
+
     def isValidPos(pos: Pos) = {
       def withinRange(x: Int, end: Int) = 0 <= x && x < end
       withinRange(pos.row, height) &&
@@ -134,7 +138,7 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
 
       val matchingPaths = for {
         (pos, path) <- newBranches
-        if maze(pos.row)(pos.col) == marker
+        if maze(pos) == marker
       } yield path.reverse
 
       if (matchingPaths.nonEmpty) matchingPaths.head
@@ -152,8 +156,6 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
     allActions.filter(isValidAction)
   }
 
-  def isUnknownPos(row: Int, col: Int) = maze(row)(col) == unknownMarker
-
   def countScanAfterAction(action: Action) = {
     val posAfterAction = pos + action
 
@@ -165,7 +167,7 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
     {
       for {
         row <- startRow to endRow
-        col <- startCol to endCol if isUnknownPos(row, col)
+        col <- startCol to endCol if maze(row, col) == unknownMarker
       } yield true
     }.size
   }
