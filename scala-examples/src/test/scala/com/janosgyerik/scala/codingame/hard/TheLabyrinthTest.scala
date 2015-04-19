@@ -100,5 +100,45 @@ class TheLabyrinthTest extends FunSuite {
     assert(Set() == game.getValidActions)
   }
 
+  test("findShortestPath: straight to the right") {
+    val game = new TheLabyrinth(Array(
+      "......",
+      ".T..C.",
+      "......"
+    ), 10)
+    assert(game.isTargetVisible)
+    assert(List(Right, Right, Right) == game.findShortestPath(game.pos, 'C'))
+  }
+
+  test("findShortestPath: down and right") {
+    val game = new TheLabyrinth(Array(
+      "......",
+      ".T....",
+      "....C."
+    ), 10)
+    assert(game.isTargetVisible)
+    assert(List(Down, Right, Right, Right) == game.findShortestPath(game.pos, 'C'))
+  }
+
+  test("findShortestPath: to the right through obstacle") {
+    val game = new TheLabyrinth(Array(
+      "......",
+      ".T.#C.",
+      "......"
+    ), 10)
+    assert(game.isTargetVisible)
+    assert(List(Up, Right, Right, Right, Down) == game.findShortestPath(game.pos, 'C'))
+  }
+
+  test("findShortestPath: down and around") {
+    val game = new TheLabyrinth(Array(
+      "....#.",
+      ".T.#C.",
+      "...##.",
+      "......"
+    ), 10)
+    assert(game.isTargetVisible)
+    assert(List(Down, Down, Right, Right, Right, Right, Up, Up, Left) == game.findShortestPath(game.pos, 'C'))
+  }
 
 }
