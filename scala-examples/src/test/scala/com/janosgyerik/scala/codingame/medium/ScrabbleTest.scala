@@ -17,7 +17,7 @@ class ScrabbleTest extends FunSuite {
 
   val testdir = "src/test/resources/codingame/medium/scrabble"
 
-  for (i <- 1 to 1) {
+  for (i <- 1 to 2) {
     test("input" + i) {
       assert(Source.fromFile(testdir + "/out" + i + ".txt").mkString.trim
         == solve(new Scanner(new File(testdir + "/in" + i + ".txt"))))
@@ -28,7 +28,7 @@ class ScrabbleTest extends FunSuite {
     val input = "5\nbecause\nfirst\nthese\ncould\nwhich\nhicquwh"
     val (words, letters) = parseInput(new Scanner(input))
     assert("hicquwh" == letters)
-    assert(Set("because", "first", "these", "could", "which") == words)
+    assert(Set("because", "first", "these", "could", "which") == words.toSet)
 
     val scrabble = new Scrabble(words)
     assert("which" == scrabble.wordsWithSortedLetters("chhiw"))
@@ -59,8 +59,8 @@ class ScrabbleTest extends FunSuite {
   }
 
   test("getWordWithBestScore in apple, jack, mike is jack") {
-    assert("jack" == getWordWithBestScore(Set("apple", "jack", "mike")))
-    assert("mike" == getWordWithBestScore(Set("apple", "mike")))
+    assert("jack" == getWordWithBestScore(List("apple", "jack", "mike")))
+    assert("mike" == getWordWithBestScore(List("apple", "mike")))
   }
 
   test("selectLettersUsingBitmask apple 14") {
@@ -76,7 +76,7 @@ class ScrabbleTest extends FunSuite {
   }
 
   test("findPossibleWords in ale, pale, pole, jack using apple") {
-    val words = Set("ale", "pale", "pole", "jack")
+    val words = List("ale", "pale", "pole", "jack")
     val letters = "apple"
 
     val scrabble = new Scrabble(words)
