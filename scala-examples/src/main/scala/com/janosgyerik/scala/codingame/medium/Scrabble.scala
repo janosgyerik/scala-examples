@@ -12,7 +12,7 @@ object Scrabble {
 
     val words = {
       for (_ <- 1 to wordsCount) yield scanner.nextLine()
-    }.toSet
+    }.toList
     val letters = scanner.nextLine()
     (words, letters)
   }
@@ -35,7 +35,7 @@ object Scrabble {
 
   def calculateScore(word: String) = word.map(scoreMap).sum
 
-  def getWordWithBestScore(words: Set[String]) = {
+  def getWordWithBestScore(words: List[String]) = {
     val wordsWithScores = for {
       word <- words
     } yield (word, calculateScore(word))
@@ -65,11 +65,11 @@ object Scrabble {
 
 }
 
-class Scrabble(words: Set[String]) {
+class Scrabble(words: List[String]) {
 
   import Scrabble._
 
-  val wordsWithSortedLetters = words.map(word => word.sorted -> word).toMap
+  val wordsWithSortedLetters = words.reverseMap(word => word.sorted -> word).toMap
 
   def findPossibleWords(letters: String): Set[String] = {
     val sortedLetters = letters.sorted
@@ -78,7 +78,13 @@ class Scrabble(words: Set[String]) {
     letterSelections.intersect(wordsWithSortedLetters.keySet).map(wordsWithSortedLetters)
   }
 
+  def getPossibleWordsInOriginalOrder(possibleWords: Set[String]) = {
+    for { word <- words if possibleWords.contains(word) } yield word
+  }
+
   def findBestWord(letters: String): String = {
-    getWordWithBestScore(findPossibleWords(letters))
+    val possibleWords = findPossibleWords(letters)
+    val possibleWordsInOriginalOrder = getPossibleWordsInOriginalOrder(possibleWords)
+    getWordWithBestScore(possibleWordsInOriginalOrder)
   }
 }
