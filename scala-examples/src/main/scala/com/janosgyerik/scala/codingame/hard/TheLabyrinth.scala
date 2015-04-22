@@ -128,6 +128,9 @@ class TheLabyrinth(initialMaze: Maze, alarm: Int = 0) {
   def findShortestPath(from: Pos, to: Pos): List[Action] = ???
 
   def findShortestPath(from: Pos, marker: Marker): List[Action] = {
+    // TODO: set a limit to depth searched
+    // TODO: make it possible to search for both Pos and Marker, using a matcher function (another overload)
+
     type Branch = (Pos, List[Action])
 
     @tailrec
