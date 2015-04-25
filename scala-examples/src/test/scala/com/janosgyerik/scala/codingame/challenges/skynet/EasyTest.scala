@@ -25,14 +25,21 @@ class EasyTest extends FunSuite {
 
     assert(Set(Node(3)) == game.gwNodes)
 
-    assert(Set(Link(1, 3), Link(2, 3)) == game.nodesToGw)
+    assert(Set(Link(1, 3), Link(2, 3)) == game.nodeLinksToGw)
 
-    assert("1 3" == game.next(RoundInputs.fromString("2\n"))._1)
+    assert("1 3" == game.next(RoundInputs.fromString("0\n"))._1)
+
+    val nextGame = game.next(RoundInputs.fromString("0\n"))._2
+    assert(Set(
+      Link(0, 1), Link(1, 0),
+      Link(0, 2), Link(2, 0),
+      Link(2, 3), Link(3, 2)
+    ) == nextGame.allLinks)
   }
 
   test("round inputs") {
     val inputs = RoundInputs.fromString("2\n")
-    assert(2 == inputs.agentId)
+    assert(2 == inputs.agentNodeId)
   }
 
 }

@@ -37,11 +37,7 @@ class InitialInputs(val nodeIdPairs: List[(Int, Int)], val gwIds: List[Int]) {
   }
 
   def nonMatching(pair: (Int, Int), link: Link): Boolean = pair match {
-    case (id1, id2) =>
-      id1 != link.id1 &&
-      id1 != link.id2 &&
-      id2 != link.id1 &&
-      id2 != link.id2
+    case (id1, id2) => !(id1 == link.id1 && id2 == link.id2 || id1 == link.id2 && id2 == link.id1)
   }
 }
 
@@ -51,7 +47,7 @@ object RoundInputs {
   def fromScanner(scanner: Scanner): RoundInputs = new RoundInputs(scanner.nextInt)
 }
 
-class RoundInputs(val agentId: Int)
+class RoundInputs(val agentNodeId: Int)
 
 case class Node(id: Int)
 
@@ -71,12 +67,12 @@ class Game(initialInputs: InitialInputs) {
 
   val gwNodes = initialInputs.gwIds.map(Node).toSet
 
-  val nodesToGw = allLinks.filter(link => gwNodes.contains(link.n2))
+  val nodeLinksToGw = allLinks.filter(link => gwNodes.contains(link.n2))
 
   def getLinkToDelete(inputs: RoundInputs): Link = {
-    val primary = nodesToGw.filter(link => gwNodes.contains(link.n2))
+    val primary = nodeLinksToGw.filter(link => link.id1 == inputs.agentNodeId)
     if (primary.nonEmpty) primary.head
-    else nodesToGw.head
+    else nodeLinksToGw.head
   }
 
   def next(inputs: RoundInputs) = {
