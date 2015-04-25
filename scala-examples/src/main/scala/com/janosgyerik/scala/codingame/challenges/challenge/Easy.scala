@@ -18,17 +18,52 @@ object Player extends App {
 
 case class Node(row: Int, col: Int, needs: Int) {
 
+  def findNeighbors(links: List[Link]): Set[Node] =
+    links.filter(_.contains(this)).map(link => if (link.n1 == this) link.n2 else link.n1).toSet
+
+  def needAllPossibleConnections(links: List[Link]): Boolean = {
+    findNeighbors(links).map(_.getProvidableCount).sum == needs
+  }
+  
+  def getProvidableCount = math.max(needs, 2)
 }
 
 case class Link(n1: Node, n2: Node) {
+  def contains(node: Node): Boolean = n1 == node || n2 == node
 
+}
+
+class GameState(links: List[Link], nodes: Set[Node]) {
+  def findNodesThatNeedAllPossibleConnections = {
+    nodes.filter(_.needAllPossibleConnections(links))
+  }
+  
+  def getAllPossibleConnections(node: Node): Set[(Link, Int)] = {
+    for {
+      neighbor <- node.findNeighbors(links)
+    } yield (Link(node, neighbor), neighbor.getProvidableCount)
+  }
+
+  def removeConnections(list: Set[(Link, Int)]): GameState = {
+    ???
+    // next:
+    // - eliminate nodes whose needs were fulfilled
+      // - prepare set of updated nodes:
+      //    - for each node involved:
+      //      - if still needs connections, yield updated Node
+      //      - else yield Nil
+      // - remove original nodes
+      // - add updated nodes
+    // - eliminate unused links
+    //  - links involving nodes not in the updated set
+  }
 }
 
 object Solution {
 
   val emptyMarker = '.'
 
-  def getNodes(links: List[Link]) = {
+  def getNodes(links: List[Link]): Set[Node] = {
     links.flatMap(link => List(link.n1, link.n2)).toSet
   }
 
