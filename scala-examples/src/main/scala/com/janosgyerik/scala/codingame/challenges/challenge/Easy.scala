@@ -4,16 +4,33 @@ import java.util.Scanner
 
 object Player extends App {
   val scanner = new Scanner(System.in)
-  val width = scanner.nextInt
-  val height = scanner.nextInt
 
-  val lines = { for { _ <- List.range(1, height) } yield scanner.nextLine }.toArray
-  lines.foreach(System.err.println)
+  solve(scanner)
 
-  var links = Solution.parseLinks(lines)
-  var nodes = Solution.getNodes(links)
+  def solve(scanner: Scanner): Unit = {
+    val width = scanner.nextInt
+    val height = scanner.nextInt
+    scanner.nextLine
 
-  println("0 0 2 0 1")
+    val lines = { for { _ <- List.range(0, height) } yield scanner.nextLine }.toArray
+
+    val links = Solution.parseLinks(lines)
+    val nodes = Solution.getNodes(links)
+
+    var game = new GameState(links, nodes)
+    do {
+      val nodes = game.findNodesThatNeedAllPossibleConnections
+      if (nodes.nonEmpty) {
+        val node = nodes.head
+        val connections = game.getAllPossibleConnections(node)
+        connections.foreach {
+          case (link, n) =>
+            println("%s %s %s %s %s".format(link.n1.col, link.n1.row, link.n2.col, link.n2.row, n))
+        }
+        game = game.removeConnections(connections)
+      }
+    } while (game.nodes.nonEmpty)
+  }
 }
 
 case class Node(row: Int, col: Int, needs: Int) {
@@ -33,7 +50,7 @@ case class Link(n1: Node, n2: Node) {
 
 }
 
-class GameState(links: List[Link], nodes: Set[Node]) {
+class GameState(val links: List[Link], val nodes: Set[Node]) {
   def findNodesThatNeedAllPossibleConnections = {
     nodes.filter(_.needsAllPossibleConnections(links))
   }
@@ -50,25 +67,25 @@ class GameState(links: List[Link], nodes: Set[Node]) {
     }.groupBy(_._1).map { case (node, pairs) => (node, pairs.map(_._2).sum) }
   }
 
-  def computeNodeUpdates(connections: Set[(Link, Int)]): (List[Node], List[Node], List[Node]) = {
-    val nodesUsed = connections.flatMap { case (link, _) => List(link.n1, link.n2) }
-//    val nodesToRemove = 
-//    val nodesToUpdate = ???
-    ???
+  def computeNodeReductionMap(reductions: Map[Node, Int]) = {
+    for {
+      (k, v) <- reductions
+    } yield k -> Node(k.row, k.col, k.needs - v)
+  }
+
+  def computeNodeUpdates(connections: Set[(Link, Int)]): (Set[Node], Set[Node], Set[Node]) = {
+    val updates = computeNodeReductionMap(computeNeedReductions(connections))
+    val nodesUsed = updates.keys.toSet
+    val nodesToRemove = updates.values.filter(_.needs == 0).toSet
+    val nodesToUpdate = updates.values.filter(_.needs > 0).toSet
+    (nodesUsed, nodesToRemove, nodesToUpdate)
   }
 
   def removeConnections(list: Set[(Link, Int)]): GameState = {
-    ???
-    // next:
-    // - eliminate nodes whose needs were fulfilled
-      // - prepare set of updated nodes:
-      //    - for each node involved:
-      //      - if still needs connections, yield updated Node
-      //      - else yield Nil
-      // - remove original nodes
-      // - add updated nodes
-    // - eliminate unused links
-    //  - links involving nodes not in the updated set
+    val (nodesUsed, nodesToRemove, nodesToUpdate) = computeNodeUpdates(list)
+    val newNodes = nodes.filter(node => !nodesUsed.contains(node)) ++ nodesToUpdate
+    val newLinks = links.filter(link => !nodesToRemove.contains(link.n1) && !nodesToRemove.contains(link.n2))
+    new GameState(newLinks, newNodes)
   }
 }
 

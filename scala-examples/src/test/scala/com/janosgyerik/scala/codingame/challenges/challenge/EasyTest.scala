@@ -3,7 +3,7 @@ package com.janosgyerik.scala.codingame.challenges.challenge
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-
+import java.util.Scanner
 
 @RunWith(classOf[JUnitRunner])
 class EasyTest extends FunSuite {
@@ -53,5 +53,23 @@ class EasyTest extends FunSuite {
     val node = Node(2, 0, 2)
     val connections = game.getAllPossibleConnections(node)
     assert(Map(Node(2,2,1) -> 1, Node(2,0,2) -> 2, Node(0,0,1) -> 1) == game.computeNeedReductions(connections))
+  }
+
+  test("computeNodeReductionMap") {
+    val game = new GameState(links, nodes)
+    val node = Node(2, 0, 2)
+    val connections = game.getAllPossibleConnections(node)
+    val reductions = game.computeNeedReductions(connections)
+    assert(Map(Node(2,2,1) -> Node(2,2,0), Node(2,0,2) -> Node(2,0,0), Node(0,0,1) -> Node(0,0,0)) ==
+      game.computeNodeReductionMap(reductions))
+  }
+
+  test("removeConnections") {
+    val game = new GameState(links, nodes)
+    val node = Node(2, 0, 2)
+    val connections = game.getAllPossibleConnections(node)
+    val game2 = game.removeConnections(connections)
+    Player.solve(new Scanner("3\n3\n1.2\n...\n..1\n"))
+    assert(game2.nodes.isEmpty)
   }
 }
