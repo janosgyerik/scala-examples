@@ -47,4 +47,11 @@ class EasyTest extends FunSuite {
     assert(2 == Node(2, 0, 3).getProvidableCount)
     assert(0 == Node(2, 0, 0).getProvidableCount)
   }
+
+  test("computeNeedReductions") {
+    val game = new GameState(links, nodes)
+    val node = Node(2, 0, 2)
+    val connections = game.getAllPossibleConnections(node)
+    assert(Map(Node(2,2,1) -> 1, Node(2,0,2) -> 2, Node(0,0,1) -> 1) == game.computeNeedReductions(connections))
+  }
 }

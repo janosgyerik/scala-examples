@@ -44,6 +44,19 @@ class GameState(links: List[Link], nodes: Set[Node]) {
     } yield (Link(node, neighbor), neighbor.getProvidableCount)
   }
 
+  def computeNeedReductions(connections: Set[(Link, Int)]) = {
+    connections.toList.flatMap {
+      case (link, n) => List((link.n1, n), (link.n2, n))
+    }.groupBy(_._1).map { case (node, pairs) => (node, pairs.map(_._2).sum) }
+  }
+
+  def computeNodeUpdates(connections: Set[(Link, Int)]): (List[Node], List[Node], List[Node]) = {
+    val nodesUsed = connections.flatMap { case (link, _) => List(link.n1, link.n2) }
+//    val nodesToRemove = 
+//    val nodesToUpdate = ???
+    ???
+  }
+
   def removeConnections(list: Set[(Link, Int)]): GameState = {
     ???
     // next:
