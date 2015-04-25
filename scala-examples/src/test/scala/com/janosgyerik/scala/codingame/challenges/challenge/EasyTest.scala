@@ -26,6 +26,10 @@ class EasyTest extends FunSuite {
     assert(Set(Node(0, 0, 1), Node(2, 2, 1)) == Node(2, 0, 2).findNeighbors(links))
   }
 
+  test("needAllPossibleConnections exmaple1") {
+    assert(Node(2, 0, 2).needsAllPossibleConnections(links))
+  }
+
   test("findNodesThatNeedAllPossibleConnections example1") {
     val game = new GameState(links, nodes)
     assert(Set(Node(2, 0, 2)) == game.findNodesThatNeedAllPossibleConnections)

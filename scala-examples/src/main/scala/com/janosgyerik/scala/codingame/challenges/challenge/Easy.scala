@@ -21,8 +21,8 @@ case class Node(row: Int, col: Int, needs: Int) {
   def findNeighbors(links: List[Link]): Set[Node] =
     links.filter(_.contains(this)).map(link => if (link.n1 == this) link.n2 else link.n1).toSet
 
-  def needAllPossibleConnections(links: List[Link]): Boolean = {
-    findNeighbors(links).map(_.getProvidableCount).sum == needs
+  def needsAllPossibleConnections(links: List[Link]): Boolean = {
+    findNeighbors(links).toList.map(_.getProvidableCount).sum == needs
   }
   
   def getProvidableCount = math.min(needs, 2)
@@ -35,7 +35,7 @@ case class Link(n1: Node, n2: Node) {
 
 class GameState(links: List[Link], nodes: Set[Node]) {
   def findNodesThatNeedAllPossibleConnections = {
-    nodes.filter(_.needAllPossibleConnections(links))
+    nodes.filter(_.needsAllPossibleConnections(links))
   }
   
   def getAllPossibleConnections(node: Node): Set[(Link, Int)] = {
