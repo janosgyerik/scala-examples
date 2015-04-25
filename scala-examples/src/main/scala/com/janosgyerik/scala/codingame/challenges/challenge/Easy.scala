@@ -11,6 +11,7 @@ object Player extends App {
   lines.foreach(System.err.println)
 
   var links = Solution.parseLinks(lines)
+  var nodes = Solution.getNodes(links)
 
   println("0 0 2 0 1")
 }
@@ -30,7 +31,12 @@ case class Link(n1: Node, n2: Node) {
 }
 
 object Solution {
+
   val emptyMarker = '.'
+
+  def getNodes(links: List[Link]) = {
+    links.flatMap(link => List(link.n1, link.n2)).toSet
+  }
 
   def parseLinks(lines: Array[String]): List[Link] = {
     val width = lines(0).length
