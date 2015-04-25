@@ -25,7 +25,10 @@ class EasyTest extends FunSuite {
 
     val links = parseLinks(input)
     val nodes = getNodes(links)
+
     assert(Set(Node(2, 0, 2)) == nodes.head.findNeighbors(links))
+
+    assert(Set(Node(0, 0, 1), Node(2, 2, 1)) == Node(2, 0, 2).findNeighbors(links))
   }
 
   test("findNodesThatNeedAllPossibleConnections 1.2 ... ..1") {
