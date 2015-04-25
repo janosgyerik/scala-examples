@@ -36,4 +36,11 @@ class EasyTest extends FunSuite {
     assert(Set((Link(Node(2,0,2),Node(0,0,1)),1), (Link(Node(2,0,2),Node(2,2,1)),1))
       == game.getAllPossibleConnections(Node(2, 0, 2)))
   }
+
+  test("getProvidableCount") {
+    assert(1 == Node(0, 0, 1).getProvidableCount)
+    assert(2 == Node(2, 0, 2).getProvidableCount)
+    assert(2 == Node(2, 0, 3).getProvidableCount)
+    assert(0 == Node(2, 0, 0).getProvidableCount)
+  }
 }
