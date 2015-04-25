@@ -72,4 +72,10 @@ class EasyTest extends FunSuite {
     Player.solve(new Scanner("3\n3\n1.2\n...\n..1\n"))
     assert(game2.nodes.isEmpty)
   }
+
+  test("solve example2") {
+    val game = new GameState(links, nodes)
+    // starts well, but doesn't terminate
+//    Player.solve(new Scanner("2\n2\n42\n31"))
+  }
 }
