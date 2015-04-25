@@ -20,12 +20,6 @@ case class Node(row: Int, col: Int, needs: Int) {
 
 }
 
-/**
- * Possible link. The ordering of the nodes doesn't matter.
- *
- * @param n1 node 1
- * @param n2 node 2
- */
 case class Link(n1: Node, n2: Node) {
 
 }
