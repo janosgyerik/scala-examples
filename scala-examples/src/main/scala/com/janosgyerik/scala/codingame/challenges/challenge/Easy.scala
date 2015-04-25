@@ -25,7 +25,7 @@ case class Node(row: Int, col: Int, needs: Int) {
     findNeighbors(links).map(_.getProvidableCount).sum == needs
   }
   
-  def getProvidableCount = math.max(needs, 2)
+  def getProvidableCount = math.min(needs, math.max(needs, 2))
 }
 
 case class Link(n1: Node, n2: Node) {
