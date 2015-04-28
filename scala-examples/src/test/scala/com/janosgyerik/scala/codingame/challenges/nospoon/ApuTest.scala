@@ -1,12 +1,13 @@
-package com.janosgyerik.scala.codingame.challenges.challenge
+package com.janosgyerik.scala.codingame.challenges.nospoon
 
+import com.janosgyerik.scala.codingame.challenges.nospoon._
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import java.util.Scanner
 
 @RunWith(classOf[JUnitRunner])
-class EasyTest extends FunSuite {
+class ApuTest extends FunSuite {
 
   import Solution._
 

@@ -1,4 +1,4 @@
-package com.janosgyerik.scala.codingame.challenges.challenge
+package com.janosgyerik.scala.codingame.challenges.nospoon
 
 import java.util.Scanner
 
