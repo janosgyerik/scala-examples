@@ -34,7 +34,14 @@ class ApuImprovementTest extends FunSuite {
   }
 
   test("takeFromRight") {
-//    assert("" == takeFromRight(nodes.head))
+    val lines = Array("2.", "42")
+    val nodes = parseNodes(lines)
+    assert(Node(0,0,2,Node(-1,-1,0,null,null),Node(1,0,4,Node(-1,-1,0,null,null),Node(-1,-1,0,null,null)))
+      == nodes.head)
+    assert(Node(0,0,1,Node(-1,-1,0,null,null),Node(1,0,3,Node(-1,-1,0,null,null),Node(-1,-1,0,null,null)))
+      == takeFromDown(nodes.head))
+    assert(Node(0,0,0,Node(-1,-1,0,null,null),Node(1,0,2,Node(-1,-1,0,null,null),Node(-1,-1,0,null,null)))
+      == takeFromDown(takeFromDown(nodes.head)))
   }
 
 }
