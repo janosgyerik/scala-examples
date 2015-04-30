@@ -12,7 +12,9 @@ object Player extends App {
     val height = scanner.nextInt
     scanner.nextLine
 
-    val lines = { for { _ <- List.range(0, height) } yield scanner.nextLine }.toArray
+    val lines = {
+      for {_ <- List.range(0, height)} yield scanner.nextLine
+    }.toArray
 
     import GameState._
 
@@ -39,8 +41,11 @@ case class Node(rowNum: Int, colNum: Int, needs: Int = 0, right: Node = Node.End
   def satisfyWithBoth =
     Node(rowNum, colNum, needs - 2, right.satisfyOne, down.satisfyOne)
 
+  def satisfy(n: Int): Node =
+    Node(rowNum, colNum, needs - n, right, down)
+
   def satisfyOne: Node =
-    Node(rowNum, colNum, needs - 1, right, down)
+    satisfy(1)
 }
 
 case class Link(n1: Node, n2: Node)
@@ -109,10 +114,16 @@ object GameState {
     getConnections(nodes)
   }
 
+  def getNormalizedConnections(connections: List[Conn]) = {
+    connections.groupBy(_.n2).map {
+      case (n2, conns2) => n2 -> conns2.map(_.num).sum
+    }.map { case (n2, num) => Conn(connections.head.n1, n2, num) }.toList
+  }
+
   def getConnections(nodes: List[Node]): List[Conn] = nodes match {
     case Nil => Nil
-    case x::xs =>
-      val connections = getConnections(x)
+    case x :: xs =>
+      val connections = getNormalizedConnections(getConnections(x))
       val rest = getRest(xs, connections)
       connections ++ getConnections(rest)
   }
@@ -130,16 +141,11 @@ object GameState {
   def takeFromDown(node: Node) =
     Node(node.rowNum, node.colNum, node.needs - 1, node.right, node.down.satisfyOne)
 
-  def updated(nodes: List[Node], nodesToReplace: List[Node]): List[Node] = for {
-    n1 <- nodes
-    nx <- nodesToReplace
-    if n1.rowNum == nx.rowNum && n1.colNum == nx.colNum
-  } yield n1.satisfyOne
-
-  def getRest(nodes: List[Node], connections: List[Conn]): List[Node] = {
-    val nodesToReplace = connections.map(_.n2)
-//    println(nodes.size)
-//    println(nodesToReplace.size)
-    updated(nodes, connections.map(_.n2))
-  }
+  def getRest(nodes: List[Node], connections: List[Conn]): List[Node] =
+    for {
+      n1 <- nodes
+      conn <- connections
+      n2 = conn.n2
+      if n1.rowNum == n2.rowNum && n1.colNum == n2.colNum
+    } yield n1.satisfy(conn.num)
 }

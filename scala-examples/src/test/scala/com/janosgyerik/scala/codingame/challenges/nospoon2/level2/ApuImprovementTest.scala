@@ -44,4 +44,10 @@ class ApuImprovementTest extends FunSuite {
       == takeFromDown(takeFromDown(nodes.head)))
   }
 
+  test("getNormalizedConnections") {
+    val conn1 = List(Conn(Node(1, 1), Node(2, 2), 1))
+    assert(conn1 == getNormalizedConnections(conn1))
+    assert(List(Conn(Node(1, 1), Node(2, 2), 3)) == getNormalizedConnections(conn1 ++ conn1 ++ conn1))
+  }
+
 }
