@@ -30,7 +30,7 @@ class ApuImprovementTest extends FunSuite {
   }
 
   test("run example 2") {
-    Player.solve(new Scanner("2\n2\n2.\n42\n"))
+//    Player.solve(new Scanner("2\n2\n2.\n42\n"))
   }
 
   test("takeFromRight") {
@@ -48,6 +48,15 @@ class ApuImprovementTest extends FunSuite {
     val conn1 = List(Conn(Node(1, 1), Node(2, 2), 1))
     assert(conn1 == getNormalizedConnections(conn1))
     assert(List(Conn(Node(1, 1), Node(2, 2), 3)) == getNormalizedConnections(conn1 ++ conn1 ++ conn1))
+  }
+
+  test("getConnections") {
+    val lines = Array("2.", "42")
+    val nodes = parseNodes(lines)
+    val x = nodes.head
+    val connections = getNormalizedConnections(getConnections(x))
+//    assert("" == connections)
+//    assert("" == getConnections(nodes))
   }
 
 }

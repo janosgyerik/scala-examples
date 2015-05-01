@@ -46,6 +46,9 @@ case class Node(rowNum: Int, colNum: Int, needs: Int = 0, right: Node = Node.End
 
   def satisfyOne: Node =
     satisfy(1)
+
+  override def toString =
+    s"Node($rowNum, $colNum, $needs)"
 }
 
 case class Link(n1: Node, n2: Node)
@@ -125,6 +128,8 @@ object GameState {
     case x :: xs =>
       val connections = getNormalizedConnections(getConnections(x))
       val rest = getRest(xs, connections)
+      println("connections = " + connections)
+      println("rest = " + rest)
       connections ++ getConnections(rest)
   }
 
