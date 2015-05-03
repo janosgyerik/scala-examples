@@ -111,6 +111,11 @@ object GameState {
         connections ++ getConnections(xs, neighbors, updatedNeeds)
     }
 
+  def getUpdatedNeeds(conns: List[Conn], needs: Map[Node, Int]): Map[Node, Int] = conns match {
+    case Nil => needs
+    case x :: xs => getUpdatedNeeds(xs, needs.updated(x.n2, needs(x.n2) - x.num))
+  }
+
   def getConnections(node: Node, neighbors: Map[Node, List[Node]], needs: Map[Node, Int]): List[Conn] = {
     if (needs(node) == 0) Nil
     else if (node.right.needs > 0) Conn(node, node.right) :: getConnections(takeFromRight(node))
