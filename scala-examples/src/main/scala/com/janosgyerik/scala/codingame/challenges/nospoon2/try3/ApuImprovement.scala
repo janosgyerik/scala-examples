@@ -15,6 +15,7 @@ object Player extends App {
     val lines = {
       for {_ <- List.range(0, height)} yield scanner.nextLine
     }.toArray
+    lines.foreach(System.err.println)
 
     import GameState._
 
