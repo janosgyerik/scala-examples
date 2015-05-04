@@ -27,6 +27,10 @@ class ApuImprovementTest extends FunSuite {
     Player.solve(new Scanner("2\n2\n2.\n42\n"))
   }
 
+  test("run example 4") {
+    Player.solve(new Scanner("4\n3\n14.3\n....\n.4.4\n"))
+  }
+
   test("getNormalizedConnections") {
     val conn1 = List(Conn(Node(1, 1), Node(2, 2), 1))
     assert(conn1 == getNormalizedConnections(conn1))
