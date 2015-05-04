@@ -18,14 +18,14 @@ object Player extends App {
 
     import GameState._
 
-    val (nodes, neighbors, needs) = parseNodes(lines)
-    getOptimalConnections(nodes, neighbors, needs).foreach(println)
+    val (nodes, needs, rightNeighbors, downNeighbors) = parseNodes(lines)
+    getOptimalConnections(nodes, new GameState(needs, rightNeighbors, downNeighbors)).foreach(println)
   }
 }
 
 case class Node(rowNum: Int, colNum: Int)
 
-case class Conn(n1: Node, n2: Node, num: Int) {
+case class Conn(n1: Node, n2: Node, num: Int = 1) {
   override def toString: String = {
     "%s %s %s %s %s".format(n1.colNum, n1.rowNum, n2.colNum, n2.rowNum, num)
   }
@@ -35,7 +35,7 @@ object GameState {
 
   val emptyMarker = '.'
 
-  def parseNodes(lines: Array[String]): (List[Node], Map[Node, List[Node]], Map[Node, Int]) = {
+  def parseNodes(lines: Array[String]): (List[Node], Map[Node, Int], Map[Node, Node], Map[Node, Node]) = {
     val width = lines(0).length
     val height = lines.length
     val End = Node(-1, -1)
@@ -85,15 +85,18 @@ object GameState {
     } yield (node, need, right, down)
 
     val nodes = nodeInfoList.map(_._1)
-    val neighbors = nodeInfoList.groupBy(_._1).map {
-      case (node, (_, _, right, down)) => node -> List(right, down).filter(_ != End)
-    }
-    val needs = nodeInfoList.map { case (node, need, _) => node -> need }.toMap
-    (nodes, neighbors, needs)
+    val needs = nodeInfoList.map { case (node, need, _, _) => node -> need }.toMap + (End -> 0)
+//    val neighbors = nodeInfoList.groupBy(_._1).map {
+//      case (node, (_, _, right, down)) => node -> List(right, down).filter(_ != End)
+//    }
+    val rightNeighbors = nodeInfoList.map { case (node, _, right, _) => node -> right }.toMap
+    val downNeighbors = nodeInfoList.map { case (node, _, _, down) => node -> down }.toMap
+
+    (nodes, needs, rightNeighbors, downNeighbors)
   }
 
-  def getOptimalConnections(nodes: List[Node], neighbors: Map[Node, List[Node]], needs: Map[Node, Int]): List[Conn] = {
-    getConnections(nodes, neighbors, needs)
+  def getOptimalConnections(nodes: List[Node], gameState: GameState): List[Conn] = {
+    getConnections(nodes, gameState)
   }
 
   def getNormalizedConnections(connections: List[Conn]) = {
@@ -102,13 +105,13 @@ object GameState {
     }.map { case (n2, num) => Conn(connections.head.n1, n2, num) }.toList
   }
 
-  def getConnections(nodes: List[Node], neighbors: Map[Node, List[Node]], needs: Map[Node, Int]): List[Conn] =
-    nodes match {
+  def getConnections(nodes: List[Node], gameState: GameState): List[Conn] = nodes match {
       case Nil => Nil
       case x :: xs =>
-        val connections = getNormalizedConnections(getConnections(x, neighbors, needs))
-        val updatedNeeds = getUpdatedNeeds(connections, needs)
-        connections ++ getConnections(xs, neighbors, updatedNeeds)
+        val connections = getNormalizedConnections(getConnections(x, gameState))
+        val updatedNeeds = getUpdatedNeeds(connections, gameState.needs)
+        val updatedGameState = gameState.withUpdatedNeeds(updatedNeeds)
+        connections ++ getConnections(xs, updatedGameState)
     }
 
   def getUpdatedNeeds(conns: List[Conn], needs: Map[Node, Int]): Map[Node, Int] = conns match {
@@ -116,24 +119,47 @@ object GameState {
     case x :: xs => getUpdatedNeeds(xs, needs.updated(x.n2, needs(x.n2) - x.num))
   }
 
-  def getConnections(node: Node, neighbors: Map[Node, List[Node]], needs: Map[Node, Int]): List[Conn] = {
-    if (needs(node) == 0) Nil
-    else if (node.right.needs > 0) Conn(node, node.right) :: getConnections(takeFromRight(node))
-    else if (node.down.needs > 0) Conn(node, node.down) :: getConnections(takeFromDown(node))
-    else throw new IllegalStateException("no more available neighbors")
+  def getConnections(node: Node, gameState: GameState): List[Conn] = {
+    if (gameState.needs(node) == 0) Nil
+    else if (gameState.canUseRight(node)) {
+      Conn(node, gameState.getRight(node)) :: getConnections(node, gameState.takeFromRight(node))
+    } 
+    else if (gameState.canUseDown(node)) {
+      Conn(node, gameState.getDown(node)) :: getConnections(node, gameState.takeFromDown(node))
+    }
+    else {
+      throw new IllegalStateException("no more available neighbors")
+    }
+  }
+}
+
+class GameState(val needs: Map[Node, Int], rightNeighbors: Map[Node, Node], downNeighbors: Map[Node, Node]) {
+
+  def withUpdatedNeeds(updatedNeeds: Map[Node, Int]) =
+    new GameState(updatedNeeds, rightNeighbors, downNeighbors)
+
+  def canUseRight(node: Node) = needs(rightNeighbors(node)) > 0
+  
+  def getRight(node: Node) = rightNeighbors(node)
+  
+  def canUseDown(node: Node) = needs(downNeighbors(node)) > 0
+
+  def getDown(node: Node) = downNeighbors(node)
+
+  private def takeFrom(node: Node) = {
+    val updatedNeeds = needs.updated(node, needs(node) - 1)
+    new GameState(updatedNeeds, rightNeighbors, downNeighbors)
   }
 
-  def takeFromRight(node: Node) =
-    Node(node.rowNum, node.colNum, node.needs - 1, node.right.satisfyOne, node.down)
+  def takeFromRight(node: Node) = {
+    val right = rightNeighbors(node)
+    takeFrom(right).takeFrom(node)
+  }
 
-  def takeFromDown(node: Node) =
-    Node(node.rowNum, node.colNum, node.needs - 1, node.right, node.down.satisfyOne)
+  def takeFromDown(node: Node) = {
+    val down = downNeighbors(node)
+    takeFrom(down).takeFrom(node)
+  }
 
-  def getRest(nodes: List[Node], connections: List[Conn]): List[Node] =
-    for {
-      n1 <- nodes
-      conn <- connections
-      n2 = conn.n2
-      if n1.rowNum == n2.rowNum && n1.colNum == n2.colNum
-    } yield n1.satisfy(conn.num)
+  override def toString = s"GameState($needs)"
 }
