@@ -35,6 +35,7 @@ case class Conn(n1: Node, n2: Node, num: Int = 1) {
 object GameState {
 
   val emptyMarker = '.'
+  val maxConn = 2
 
   def parseNodes(lines: Array[String]): (List[Node], Map[Node, Int], Map[Node, Node], Map[Node, Node]) = {
     val width = lines(0).length
@@ -109,7 +110,7 @@ object GameState {
   def getConnections(nodes: List[Node], gameState: GameState): List[Conn] = nodes match {
       case Nil => Nil
       case x :: xs =>
-        val connections = getNormalizedConnections(getConnections(x, gameState))
+        val connections = getNormalizedConnections(getConnections(x, maxConn, maxConn, gameState))
         val updatedNeeds = getUpdatedNeeds(connections, gameState.needs)
         val updatedGameState = gameState.withUpdatedNeeds(updatedNeeds)
         connections ++ getConnections(xs, updatedGameState)
@@ -120,13 +121,15 @@ object GameState {
     case x :: xs => getUpdatedNeeds(xs, needs.updated(x.n2, needs(x.n2) - x.num))
   }
 
-  def getConnections(node: Node, gameState: GameState): List[Conn] = {
+  def getConnections(node: Node, remainingRight: Int, remainingDown: Int, gameState: GameState): List[Conn] = {
     if (gameState.needs(node) == 0) Nil
-    else if (gameState.canUseRight(node)) {
-      Conn(node, gameState.getRight(node)) :: getConnections(node, gameState.takeFromRight(node))
+    else if (remainingRight > 0 && gameState.canUseRight(node)) {
+      Conn(node, gameState.getRight(node)) :: getConnections(
+        node, remainingRight - 1, remainingDown, gameState.takeFromRight(node))
     } 
-    else if (gameState.canUseDown(node)) {
-      Conn(node, gameState.getDown(node)) :: getConnections(node, gameState.takeFromDown(node))
+    else if (remainingDown > 0 && gameState.canUseDown(node)) {
+      Conn(node, gameState.getDown(node)) :: getConnections(
+        node, remainingRight, remainingDown - 1, gameState.takeFromDown(node))
     }
     else {
       throw new IllegalStateException("no more available neighbors")
