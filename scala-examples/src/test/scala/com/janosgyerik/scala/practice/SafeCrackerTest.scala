@@ -8,31 +8,35 @@ import org.scalatest.junit.JUnitRunner
 class SafeCrackerTest extends FunSuite {
   import com.janosgyerik.scala.practice.SafeCracker._
 
-  test("test perm 0") {
-    assert(List() == perm(0))
+  test("cracker invalid if no symbols") {
+    intercept[IllegalArgumentException](cracker("", 1))
   }
 
-  test("test perm 1") {
-    assert(10 == perm(1).size)
+  test("cracker invalid if code length < 1") {
+    intercept[IllegalArgumentException](cracker("123", 0))
   }
 
-  test("test perm 2") {
-    assert(100 == perm(2).size)
+  test("cracker 123, len=1") {
+    assert("123" == cracker("123", 1))
   }
 
-  test("test perm 2 / 0") {
-    assert(List(0, 0) == perm(2).head)
+  test("cracker 1, len=3") {
+    assert("111" == cracker("1", 3))
   }
 
-  test("test perm 2 / 33") {
-    assert(List(3, 3) == perm(2)(33))
+  test("cracker 12, len=2") {
+    assert("112122" == cracker("12", 2))
   }
 
-  test("test perm 2 / 58") {
-    assert(List(5, 8) == perm(2)(58))
+  test("cracker 12, len=3") {
+    assert("111211221222" == cracker("12", 3))
   }
 
-  test("test perm 3 / 279") {
-    assert(List(2, 7, 9) == perm(3)(279))
+  test("cracker 0123456789, len=4") {
+    assert(10294 == cracker("0123456789", 4).length)
+  }
+
+  test("getNth 0123456789abcdef, 255") {
+    assert("ff" == getNth("0123456789abcdef", 255))
   }
 }

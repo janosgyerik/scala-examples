@@ -1,31 +1,48 @@
 package com.janosgyerik.scala.practice
 
 object SafeCracker {
-  val digits = 2
 
-  def cracker(): String = cracker("1234")
+  def cracker(symbols: String, codeLength: Int) = {
+    require(symbols.nonEmpty)
+    require(codeLength > 0)
 
-  def cracker(seq: String) = {
-    seq
-    // while set.size of unique combinations is < 10^digits
-    // find a shortest suitable sequence to append
-    // for toAppendLength in (1 to digits)
-    //  iter = perm(toAppendLength)
-    //  prefix = seq.takeRight(digits - toAppendLength)
-    //  while iter.hasNext
-    //    next = iter.next
-    //    candidate = prefix + next
-    //    try if this is a new combination: candidate
-    //      if yes: return f(unique + candidate, seq + next)
+    val combinations = math.pow(symbols.length, codeLength)
+
+    def cracker(prefix: String, used: Set[String]): String = {
+
+      def findSuffixCombo(num: Int): (String, String) = {
+        val suffix = getNth(symbols, num)
+        val combo = (prefix + suffix).takeRight(codeLength)
+
+        if (!used.contains(combo)) (suffix, combo)
+        else findSuffixCombo(num + 1)
+      }
+
+      if (used.size == combinations) prefix
+      else {
+        val (suffix, combo) = findSuffixCombo(0)
+        cracker(prefix + suffix, used + combo)
+      }
+    }
+
+    val first = symbols(0).toString * codeLength
+
+    cracker(first, Set(first))
   }
 
-  def combinations(prefix: String) = {
-    prefix.toList.map(x => x - '0')
-  }
+  def getNth(symbols: String, num: Int) = {
+    val base = symbols.length
 
-  def perm(n: Int): List[List[Int]] = n match {
-    case 0 => List()
-    case 1 => (0 to 9).map(x => List(x)).toList
-    case _ => (0 to 9).map(x => perm(n - 1).map(y => List(x) ++ y)).toList.flatten
+    def getNth(prefix: String, num: Int): String = {
+      if (num == 0) {
+        if (prefix.isEmpty) symbols(0).toString
+        else prefix
+      } else {
+        val index = num % base
+        val digit = symbols(index)
+        getNth(digit + prefix, num / base)
+      }
+    }
+    getNth("", num)
   }
 }
