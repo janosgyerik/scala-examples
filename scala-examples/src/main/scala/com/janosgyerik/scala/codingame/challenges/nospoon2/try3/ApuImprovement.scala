@@ -110,10 +110,15 @@ object GameState {
   def getConnections(nodes: List[Node], gameState: GameState): List[Conn] = nodes match {
       case Nil => Nil
       case x :: xs =>
-        val connections = getNormalizedConnections(getConnections(x, maxConn, maxConn, gameState))
-        val updatedNeeds = getUpdatedNeeds(connections, gameState.needs)
-        val updatedGameState = gameState.withUpdatedNeeds(updatedNeeds)
-        connections ++ getConnections(xs, updatedGameState)
+        val (success, conns) = getConnections(x, maxConn, maxConn, gameState)
+        if (success) {
+          val connections = getNormalizedConnections(conns)
+          val updatedNeeds = getUpdatedNeeds(connections, gameState.needs)
+          val updatedGameState = gameState.withUpdatedNeeds(updatedNeeds)
+          connections ++ getConnections(xs, updatedGameState)
+        } else {
+          Nil
+        }
     }
 
   def getUpdatedNeeds(conns: List[Conn], needs: Map[Node, Int]): Map[Node, Int] = conns match {
@@ -121,19 +126,25 @@ object GameState {
     case x :: xs => getUpdatedNeeds(xs, needs.updated(x.n2, needs(x.n2) - x.num))
   }
 
-  def getConnections(node: Node, remainingRight: Int, remainingDown: Int, gameState: GameState): List[Conn] = {
-    if (gameState.needs(node) == 0) Nil
-    else if (remainingRight > 0 && gameState.canUseRight(node)) {
-      Conn(node, gameState.getRight(node)) :: getConnections(
+  def getConnections(node: Node, remainingRight: Int, remainingDown: Int,
+                     gameState: GameState): (Boolean, List[Conn]) = {
+    if (gameState.needs(node) == 0) return (true, Nil)
+
+    if (remainingRight > 0 && gameState.canUseRight(node)) {
+      val (success, conns) = getConnections(
         node, remainingRight - 1, remainingDown, gameState.takeFromRight(node))
-    } 
-    else if (remainingDown > 0 && gameState.canUseDown(node)) {
-      Conn(node, gameState.getDown(node)) :: getConnections(
+      if (success) {
+        return (true, Conn(node, gameState.getRight(node)) :: conns)
+      }
+    }
+    if (remainingDown > 0 && gameState.canUseDown(node)) {
+      val (success, conns) = getConnections(
         node, remainingRight, remainingDown - 1, gameState.takeFromDown(node))
+      if (success) {
+        return (true, Conn(node, gameState.getDown(node)) :: conns)
+      }
     }
-    else {
-      throw new IllegalStateException("no more available neighbors")
-    }
+    (false, Nil)
   }
 }
 
