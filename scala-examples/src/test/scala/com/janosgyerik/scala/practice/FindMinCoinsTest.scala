@@ -4,8 +4,6 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import scala.annotation.tailrec
-
 @RunWith(classOf[JUnitRunner])
 class FindMinCoinsTest extends FunSuite {
 
@@ -48,7 +46,7 @@ class FindMinCoinsTest extends FunSuite {
       }
     }
 
-    findMinCoinsList(amount, Nil)._2
+    findMinCoinsList(amount, Nil)._2.sorted
   }
 
   test("find list 10 with 1, 5, 7") {
@@ -68,7 +66,7 @@ class FindMinCoinsTest extends FunSuite {
   }
 
   test("find list 7 with 1, 3, 4") {
-    assert(List(4, 3) == findMinCoinsList(7, Set(1, 3, 4)))
+    assert(List(3, 4) == findMinCoinsList(7, Set(1, 3, 4)))
   }
 
 }
