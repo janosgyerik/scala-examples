@@ -2,7 +2,7 @@ package com.janosgyerik.scala.practice
 
 object SafeCracker {
 
-  def cracker(symbols: String, codeLength: Int) = {
+  def genCrackerString(symbols: String, codeLength: Int) = {
     require(symbols.nonEmpty)
     require(codeLength > 0)
 
