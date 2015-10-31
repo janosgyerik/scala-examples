@@ -32,8 +32,16 @@ class SafeCrackerTest extends FunSuite {
     assert("111211221222" == genCrackerString("12", 3))
   }
 
-  test("cracker 0123456789, len=4") {
-    assert(10294 == genCrackerString("0123456789", 4).length)
+//  test("cracker 0123456789, len=4") {
+//    assert(10294 == genCrackerString("0123456789", 4).length)
+//  }
+
+  test("cracker 0123, len=3") {
+    assert("000100200301101201302102202303103203311121131221231321332223233300" == genCrackerString("0123", 3))
+//    assert("000100200301101201302102202303103203311121131221231321332223233300" == genCrackerString("0123", 3))
+//    assert("00010020030011012013011121021131031122022123023121320321330331322232332333" == genCrackerString("0123", 3))
+//    assert("00010020030011012013011121021131031122022123023121320321330331322232332333" == genCrackerString("0123", 3))
+//    assert(74 == genCrackerString("0123", 3).length)
   }
 
   test("getNth 0123456789abcdef, 255") {
